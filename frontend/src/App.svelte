@@ -1,0 +1,1058 @@
+<script>
+  import 'bootstrap/dist/css/bootstrap.min.css';
+  import { onMount } from 'svelte';
+  import 'bootstrap-icons/font/bootstrap-icons.css';
+  import Reg from '/home/keziah/pwd_reg_system/frontend/src/registration.svelte';
+  import CountyOfficerReg from '/home/keziah/pwd_reg_system/frontend/src/CountyRegistration.svelte';
+  import HealthOfficerReg from "/home/keziah/pwd_reg_system/frontend/src/HealthOfficerRegistration.svelte";
+
+  let showRoleSelection = false;
+  let showDisabilitySelection = false;
+  let showReg = false;
+   let showCountyOfficerReg = false;
+   let showHealthOfficerReg = false;
+   
+  let selectedRole = '';
+  let selectedDisability = '';
+
+  const roles = [
+    { id: 'pwd', label: 'Person with Disability' },
+    { id: 'county Officer', label: 'County officer' },
+     { id: 'Health Officer', label: 'Health officer' }
+  ];
+
+  const disabilities = [
+    { id: 'visual', label: 'Visual Impairment' },
+    { id: 'hearing', label: 'Hearing Impairment' },
+    { id: 'physical', label: 'Physical Disability' },
+    { id: 'mental', label: 'Mental Disability' }
+  ];
+
+  function handleGetStarted() {
+    showRoleSelection = true;
+  }
+
+
+
+
+
+function handleRoleSelect(role) {
+  selectedRole = role;
+  showRoleSelection = false;
+
+  if (role === 'pwd') {
+    showDisabilitySelection = true;
+  } else if (role === 'county Officer') { // Match exact ID from roles array
+    showCountyOfficerReg = true;
+  } else if (role === 'Health Officer') { // Match exact ID from roles array
+    showHealthOfficerReg = true;
+  }
+}
+
+
+function handleDisabilitySelect(disability) {
+  selectedDisability = disability;
+  showDisabilitySelection = false;
+  showReg = true; // Replace with the actual component/flag for Person with Disability registration
+}
+
+  import image from "/home/keziah/pwd_reg_system/frontend/src/assets/image.png"
+
+  
+ onMount(() => {
+    import('bootstrap/dist/js/bootstrap.bundle.min.js').then(() => {
+      // Initialize dropdowns after Bootstrap JS is loaded
+      const dropdowns = document.querySelectorAll('.dropdown');
+      dropdowns.forEach(dropdown => {
+        const toggle = dropdown.querySelector('.dropdown-toggle');
+        const menu = dropdown.querySelector('.dropdown-menu');
+        
+        if (toggle && menu) {
+          toggle.addEventListener('mouseenter', () => {
+            menu.classList.add('show');
+          });
+          
+          dropdown.addEventListener('mouseleave', () => {
+            menu.classList.remove('show');
+          });
+        }
+      });
+    });
+  });
+
+
+  function handleSignUpClick() {
+    // Add your signup logic here
+  }
+
+  function handleLoginClick() {
+    // Add your login logic here
+  }
+
+  const services = [
+    {
+      id: 'service1',
+      title: 'PWD Registration',
+      description: 'Easy and accessible registration process for Persons with Disabilities',
+      icon: 'bi bi-person-badge'
+    },
+    {
+      id: 'service2',
+      title: 'Benefits Management',
+      description: 'Track and manage your PWD benefits and privileges',
+      icon: 'bi bi-gift'
+    },
+    {
+      id: 'service3',
+      title: 'Support Services',
+      description: 'Access to various support services and assistance programs',
+      icon: 'bi bi-heart-pulse'
+    }
+  ];
+
+  const benefits = [
+    {
+      title: "20% Discount on Basic Commodities",
+      content: "Access discounts on medicines, food, transportation, and essential services."
+    },
+    {
+      title: "Priority Lanes & Services",
+      content: "Enjoy priority access in public establishments and government offices."
+    },
+    {
+      title: "Educational Assistance",
+      content: "Get support for educational needs and skills development programs."
+    }
+  ];
+
+  const footerLinks = {
+    quickLinks: ["About Us", "Services", "Benefits", "Contact"],
+    support: ["FAQ", "Help Center", "Privacy Policy", "Terms of Service"],
+    contact: {
+      email: "support@pwdconnect.com",
+      phone: "+254 7 871 567 890",
+      address: "123 PWD Street, Nairobi Kenya"
+    }
+  };
+</script>
+
+<style>
+  /* Modern Reset & Base Styles */
+  :global(body) {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    width: 100vw;
+    background-color: white;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Navbar Styles */
+  .navbar {
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border-bottom: 2px solid rgba(39, 102, 123, 0.1);
+  }
+
+  .nav-link {
+    position: relative;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #27667B;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(-50%);
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    width: 100%;
+  }
+
+  /* Dropdown Animations */
+  .dropdown-menu {
+    margin-top: 0.75rem;
+    border-radius: 12px;
+    border: 2px solid rgba(39, 102, 123, 0.1);
+    animation: dropdownFade 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dropdown-item {
+    padding: 0.75rem 1.25rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 8px;
+    margin: 0.25rem;
+  }
+
+  /* Container & Card Styles */
+  .image-container {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid rgba(39, 102, 123, 0.1);
+  }
+
+  .feature-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid rgba(39, 102, 123, 0.1);
+  }
+
+  /* Interactive Elements */
+  .icon-wrapper {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid rgba(39, 102, 123, 0.1);
+  }
+
+  /* Button Styles */
+  :global(.btn) {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+  }
+
+  :global(.btn-primary) {
+    background-color: #27667B;
+    border: 2px solid #27667B;
+  }
+
+  :global(.btn-primary:hover) {
+    background-color: #1e5163;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(39, 102, 123, 0.15);
+  }
+
+  :global(.btn-outline-primary) {
+    border: 2px solid #27667B;
+  }
+
+ .hero-content {
+    position: relative;
+  }
+
+  .custom-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    background: rgba(39, 102, 123, 0.08);
+    border: 1px solid rgba(39, 102, 123, 0.2);
+    border-radius: 100px;
+    font-size: 14px;
+    color: #27667B;
+    font-weight: 500;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 1.5rem;
+  }
+
+  .highlight {
+    color: #27667B;
+    position: relative;
+    display: inline-block;
+  }
+
+  .highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: rgba(39, 102, 123, 0.2);
+    z-index: -1;
+  }
+
+  .features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: #4a4a4a;
+  }
+
+  .feature-item i {
+    color: #27667B;
+    font-size: 18px;
+  }
+
+  .cta-wrapper {
+    display: flex;
+    gap: 16px;
+    margin-top: 2rem;
+  }
+
+  .btn {
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .trust-indicators {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .indicator {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .number {
+    font-size: 24px;
+    font-weight: 700;
+    color: #27667B;
+  }
+
+  .label {
+    font-size: 14px;
+    color: #666;
+    margin-top: 4px;
+  }
+
+  .divider {
+    width: 1px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* Animations */
+  @keyframes dropdownFade {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Hover Effects */
+  .image-container {
+    position: relative;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  .image-frame {
+    position: relative;
+    border: 2px solid #27667B;
+    border-radius: 24px;
+    padding: 12px;
+    background: linear-gradient(145deg, rgba(39, 102, 123, 0.05), rgba(39, 102, 123, 0.02));
+  }
+
+  .main-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 2px solid rgba(39, 102, 123, 0.1);
+  }
+
+  .decoration-dot {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #27667B;
+  }
+
+  .dot-1 {
+    top: -6px;
+    left: 24px;
+  }
+
+  .dot-2 {
+    bottom: -6px;
+    right: 24px;
+  }
+
+  .decoration-line {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 80px;
+    height: 80px;
+    border-right: 2px solid #27667B;
+    border-top: 2px solid #27667B;
+    border-radius: 0 16px 0 0;
+  }
+
+  .feature-card {
+    position: absolute;
+    bottom: 24px;
+    right: -20px;
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    border: 2px solid #27667B;
+    max-width: 280px;
+    transform: translateY(0);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .feature-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .icon-wrapper {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(39, 102, 123, 0.1);
+    border-radius: 12px;
+    border: 2px solid rgba(39, 102, 123, 0.1);
+  }
+
+  .icon-wrapper i {
+    color: #27667B;
+    font-size: 24px;
+  }
+
+  .feature-text h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #27667B;
+    margin: 0;
+  }
+
+  .feature-text p {
+    font-size: 14px;
+    color: rgba(39, 102, 123, 0.7);
+    margin: 4px 0 0;
+  }
+
+  .feature-stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 2px solid rgba(39, 102, 123, 0.1);
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-number {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    color: #27667B;
+  }
+
+  .stat-label {
+    display: block;
+    font-size: 12px;
+    color: rgba(39, 102, 123, 0.7);
+    margin-top: 4px;
+  }
+
+  .stat-divider {
+    width: 2px;
+    height: 24px;
+    background: rgba(39, 102, 123, 0.1);
+  }
+
+  /* Hover effects */
+  .image-container:hover .feature-card {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(39, 102, 123, 0.15);
+  }
+
+  .image-container:hover .icon-wrapper {
+    background: #27667B;
+  }
+
+  .image-container:hover .icon-wrapper i {
+    color: white;
+  }
+
+   .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+   background: white;
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .modal-container {
+    width: 90%;
+    max-width: 600px;
+    margin: 1.5rem;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transform: translateY(0);
+    animation: slideIn 0.3s ease-out;
+  }
+
+  .modal-content {
+    padding: 2rem;
+  }
+
+  .modal-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+
+  .title {
+    color: #1F2937;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .header-accent {
+    width: 60px;
+    height: 4px;
+    background: #3B82F6;
+    margin: 1rem auto;
+    border-radius: 2px;
+  }
+
+  .role-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .role-button {
+    background: #F3F4F6;
+    border: 2px solid transparent;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .role-button:hover {
+    background: rgba(39, 102, 123, 0.1);
+    border-color: #27667B;
+    transform: translateY(-2px);
+  }
+
+  .icon-wrapper {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #27667B;
+    border-radius: 12px;
+  }
+
+  .icon-wrapper i {
+    color: white;
+    font-size: 24px;
+  }
+
+  .role-label {
+    color: #27667B;
+  }
+
+  .role-description {
+    color: #6B7280;
+  }
+
+   .disability-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    padding: 1rem;
+  }
+
+  .disability-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: #F3F4F6;
+    border: 2px solid transparent;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    text-align: left;
+  }
+
+  .disability-card:hover {
+    background: rgba(39, 102, 123, 0.1);
+    border-color: #27667B;
+    transform: translateY(-2px);
+  }
+
+  .icon-container {
+    min-width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #27667B;
+    border-radius: 12px;
+  }
+
+  .icon-container i {
+    color: white;
+    font-size: 24px;
+  }
+
+  .disability-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .disability-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #27667B;
+  }
+
+  .disability-description {
+    font-size: 0.875rem;
+    color: #6B7280;
+  }
+
+  @media (max-width: 640px) {
+    .disability-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+{#if showReg}
+  <Reg role="pwd" disability={selectedDisability} />
+{:else if showCountyOfficerReg}
+  <CountyOfficerReg role="county Officer" />
+{:else if showHealthOfficerReg}
+  <HealthOfficerReg role="Health Officer" />
+
+  
+{:else if showRoleSelection}
+  <div class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="title" style="color: #27667B">Choose Your Role</h2>
+          <div class="header-accent" style="background: #27667B"></div>
+        </div>
+
+        <div class="role-grid">
+          {#each roles as role}
+            <button 
+              class="role-button"
+              on:click={() => handleRoleSelect(role.id)}
+            >
+              <div class="icon-wrapper">
+                {#if role.id === 'pwd'}
+                  <i class="bi bi-person-heart"></i>
+                {:else if role.id === 'county Officer'}
+                  <i class="bi bi-building"></i>
+                {:else}
+                  <i class="bi bi-hospital"></i>
+                {/if}
+              </div>
+              <span class="role-label">{role.label}</span>
+              <span class="role-description">
+                {#if role.id === 'pwd'}
+                  Register and access PWD services
+                {:else if role.id === 'county Officer'}
+                  Manage county-level PWD services
+                {:else}
+                  Provide medical assessments
+                {/if}
+              </span>
+            </button>
+          {/each}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{:else if showDisabilitySelection}
+
+<div class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="title" style="color: #27667B">Select Disability Type</h2>
+        <div class="header-accent" style="background: #27667B"></div>
+      </div>
+
+      <div class="disability-grid">
+        {#each disabilities as disability}
+          <button 
+            class="disability-card"
+            on:click={() => handleDisabilitySelect(disability.id)}
+          >
+            <div class="icon-container">
+              {#if disability.id === 'visual'}
+                <i class="bi bi-eye"></i>
+              {:else if disability.id === 'hearing'}
+                <i class="bi bi-ear"></i>
+              {:else if disability.id === 'physical'}
+                <i class="bi bi-person-wheelchair"></i>
+              {:else if disability.id === 'mental'}
+                <i class="bi bi-brain"></i>
+              {/if}
+            </div>
+            <div class="disability-info">
+              <span class="disability-label">{disability.label}</span>
+              <span class="disability-description">
+                {#if disability.id === 'visual'}
+                  Visual assistance and screen reader support
+                {:else if disability.id === 'hearing'}
+                  Sign language and visual communication tools
+                {:else if disability.id === 'physical'}
+                  Mobility assistance and accessibility features
+                {:else if disability.id === 'mental'}
+                  Cognitive support and simplified interface
+                {/if}
+              </span>
+            </div>
+          </button>
+        {/each}
+      </div>
+    </div>
+  </div>
+</div>
+{:else}
+
+<!-- Navbar with reduced height -->
+<!-- Enhanced Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm py-2">
+  <div class="container">
+    <a class="navbar-brand fs-4 fw-bold" style="color: #27667B" href="/">
+      <i class="bi bi-heart-pulse me-2"></i>PWD Access
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item px-2">
+          <a class="nav-link" href="#home">Home</a>
+        </li>
+
+        <li class="nav-item dropdown px-2">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            About Us
+          </a>
+          <ul class="dropdown-menu border-0 shadow-sm">
+            <li><a class="dropdown-item" href="#mission">Our Mission</a></li>
+            <li><a class="dropdown-item" href="#team">Our Team</a></li>
+            <li><a class="dropdown-item" href="#partners">Partners</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown px-2">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            Services
+          </a>
+          <ul class="dropdown-menu border-0 shadow-sm">
+            <li><a class="dropdown-item" href="#registration">PWD Registration</a></li>
+            <li><a class="dropdown-item" href="#benefits">Benefits Management</a></li>
+            <li><a class="dropdown-item" href="#support">Support Services</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#special">Special Programs</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown px-2">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            Resources
+          </a>
+          <ul class="dropdown-menu border-0 shadow-sm">
+            <li><a class="dropdown-item" href="#guides">User Guides</a></li>
+            <li><a class="dropdown-item" href="#faq">FAQs</a></li>
+            <li><a class="dropdown-item" href="#downloads">Downloads</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown px-2">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            Support
+          </a>
+          <ul class="dropdown-menu border-0 shadow-sm">
+            <li><a class="dropdown-item" href="#helpdesk">Help Desk</a></li>
+            <li><a class="dropdown-item" href="#contact">Contact Us</a></li>
+            <li><a class="dropdown-item" href="#feedback">Feedback</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <div class="d-flex gap-3 align-items-center">
+        <div class="dropdown">
+          <button class="btn btn-link text-decoration-none p-0" data-bs-toggle="dropdown">
+            <i class="bi bi-search fs-5" style="color: #27667B"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end p-3 border-0 shadow-sm" style="width: 300px">
+            <input type="search" class="form-control" placeholder="Search...">
+          </div>
+        </div>
+        <button class="btn btn-outline-primary px-4">Login</button>
+        <button class="btn btn-primary px-4"   on:click={handleGetStarted}>Register</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section with improved layout -->
+<section class="hero min-vh-100 d-flex align-items-center bg-white" style="padding-top: 5rem;">
+  <div class="container">
+    <div class="row align-items-center justify-content-between g-5">
+      <div class="col-lg-5">
+  <div class="hero-content">
+    <!-- Badge -->
+    <div class="badge-wrapper mb-4">
+      <span class="custom-badge">
+        <i class="bi bi-stars me-2"></i>
+        Trusted by 10,000+ PWDs
+      </span>
+    </div>
+
+    <!-- Main Title -->
+    <h1 class="hero-title">
+      Empowering <span class="highlight">PWDs</span> Through Digital Innovation
+    </h1>
+
+    <!-- Subtitle with Icons -->
+    <div class="features-list my-4">
+      <div class="feature-item">
+        <i class="bi bi-check-circle-fill"></i>
+        <span>Quick Registration Process</span>
+      </div>
+      <div class="feature-item">
+        <i class="bi bi-shield-check"></i>
+        <span>Secure Data Protection</span>
+      </div>
+      <div class="feature-item">
+        <i class="bi bi-clock"></i>
+        <span>24/7 Support Available</span>
+      </div>
+    </div>
+
+    <!-- CTA Buttons -->
+    <div class="cta-wrapper">
+     <button class="btn btn-primary" on:click={handleGetStarted}>
+  Get Started Now
+  <i class="bi bi-arrow-right ms-2"></i>
+</button>
+      <button class="btn btn-outline-primary">
+        Watch Demo
+        <i class="bi bi-play-circle ms-2"></i>
+      </button>
+    </div>
+
+    <!-- Trust Indicators -->
+    <div class="trust-indicators mt-5">
+      <div class="indicator">
+        <span class="number">98%</span>
+        <span class="label">Success Rate</span>
+      </div>
+      <div class="divider"></div>
+      <div class="indicator">
+        <span class="number">5min</span>
+        <span class="label">Process Time</span>
+      </div>
+    </div>
+  </div>
+</div>
+     <div class="col-lg-6">
+  <div class="position-relative">
+    <div class="image-container">
+      <div class="image-frame">
+        <img 
+          src={image} 
+          alt="PWD Support" 
+          class="main-image"
+        >
+        <!-- Decorative elements -->
+        <div class="decoration-dot dot-1"></div>
+        <div class="decoration-dot dot-2"></div>
+        <div class="decoration-line"></div>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-header">
+          <div class="icon-wrapper">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+          <div class="feature-text">
+            <h4>Easy Registration</h4>
+            <p>Get your PWD ID in 3 simple steps</p>
+          </div>
+        </div>
+        
+        <div class="feature-stats">
+          <div class="stat-item">
+            <span class="stat-number">5min</span>
+            <span class="stat-label">Process Time</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-number">24/7</span>
+            <span class="stat-label">Support</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+   
+
+</div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Services Section with enhanced cards -->
+<section class="py-5 bg-light">
+  <div class="container py-5">
+    <h2 class="text-center h2 fw-bold mb-5" style="color: #27667B">Our Services</h2>
+    <div class="row g-4">
+      {#each services as service}
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm hover-lift">
+            <div class="card-body p-4">
+              <div class="icon-wrapper mb-4 p-3 rounded-3" style="background: #27667B10">
+                <i class="{service.icon} fs-2" style="color: #27667B"></i>
+              </div>
+              <h3 class="h5 mb-3">{service.title}</h3>
+              <p class="text-muted small">{service.description}</p>
+            </div>
+          </div>
+        </div>
+      {/each}
+    </div>
+  </div>
+</section>
+
+<!-- Benefits Section with accordion -->
+<section class="py-5 bg-white">
+  <div class="container py-5">
+    <h2 class="text-center h2 fw-bold mb-5" style="color: #27667B">PWD Benefits</h2>
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="accordion" id="benefitsAccordion">
+          {#each benefits as benefit, index}
+            <div class="accordion-item border-0 mb-3 shadow-sm">
+              <h2 class="accordion-header">
+                <button class="accordion-button {index === 0 ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#benefit{index}">
+                  {benefit.title}
+                </button>
+              </h2>
+              <div id="benefit{index}" class="accordion-collapse collapse {index === 0 ? 'show' : ''}" data-bs-parent="#benefitsAccordion">
+                <div class="accordion-body">
+                  {benefit.content}
+                </div>
+              </div>
+            </div>
+          {/each}
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <img src={image} alt="Benefits" class="img-fluid rounded-4 shadow-lg">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Enhanced Footer -->
+<footer class="bg-light py-5">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <h5 class="fw-bold mb-4" style="color: #27667B">PWD Connect</h5>
+        <p class="text-muted small">Empowering lives through accessible support and comprehensive services for Persons with Disabilities.</p>
+        <div class="social-links mt-4">
+          <a href="#" class="text-muted me-3"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="text-muted me-3"><i class="bi bi-twitter"></i></a>
+          <a href="#" class="text-muted"><i class="bi bi-instagram"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-2">
+        <h6 class="fw-bold mb-4">Quick Links</h6>
+        <ul class="list-unstyled">
+          {#each footerLinks.quickLinks as link}
+            <li class="mb-2"><a href="#" class="text-muted text-decoration-none">{link}</a></li>
+          {/each}
+        </ul>
+      </div>
+      <div class="col-lg-2">
+        <h6 class="fw-bold mb-4">Support</h6>
+        <ul class="list-unstyled">
+          {#each footerLinks.support as link}
+            <li class="mb-2"><a href="#" class="text-muted text-decoration-none">{link}</a></li>
+          {/each}
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <h6 class="fw-bold mb-4">Contact Us</h6>
+        <ul class="list-unstyled">
+          <li class="mb-2"><i class="bi bi-envelope me-2"></i>{footerLinks.contact.email}</li>
+          <li class="mb-2"><i class="bi bi-telephone me-2"></i>{footerLinks.contact.phone}</li>
+          <li class="mb-2"><i class="bi bi-geo-alt me-2"></i>{footerLinks.contact.address}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-top mt-5 pt-4 text-center">
+      <p class="small text-muted mb-0">&copy; 2025 PWD Access. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+{/if}
