@@ -1,7 +1,6 @@
 <script>
   import { onMount } from 'svelte';
   import { AssistiveTools } from '../src/Assistive.js';
-  import { counties } from '/home/keziah/pwd_reg_system/frontend/src/data/counties.js';
 
   // Props
   export let disability;
@@ -15,19 +14,20 @@
   // Form Data
   let formData = {
     nationalId: '',
+    countyOfBirth: '',
     password: '',
     confirmPassword: '',
-    mobile: '',
+    fullName: '',
     email: '',
-    county: ''
+    mobile: ''
   };
 
-  function handleSubmit() {
-    // Handle county officer registration
-    console.log('Form Data Submitted:', formData);
-  }
+  // Counties Data
+  const counties = [
+    'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Kiambu', 'Machakos', 'Kajiado', 'Uasin Gishu'
+  ];
 
-  // Helper Functions from the first example
+  // Helper Functions
   function createInputProps(name, type, value) {
     return {
       id: name,
@@ -52,197 +52,402 @@
       window.speechSynthesis.speak(utterance);
     }
   }
+
+  function handleSubmit() {
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match!');
+      return;
+    }
+    console.log('Form Data Submitted:', formData);
+  }
 </script>
 
-<div class="page-container {disability}-mode" role="form">
-  <!-- Assistive Controls -->
-  <div class="assistive-controls" class:visible={disability}>
-    {#if disability === 'visual'}
-      <button 
-        class="btn btn-voice" 
-        class:active={isListening} 
-        on:click={toggleVoiceInput}
-        aria-label="Toggle voice input">
-        <i class="bi bi-mic" aria-hidden="true"></i>
-      </button>
-    {/if}
-    <button 
-      class="btn btn-help" 
-      on:click={() => assistiveTools?.provideContextualHelp()}
-      aria-label="Get help">
-      <i class="bi bi-question-circle" aria-hidden="true"></i>
+<div class="page-wrapper">
+  <div class="header-section">
+    <div class="form-header">
+      <h2>County Registration</h2>
+      <p>Complete your registration details below</p>
+    </div>
+    <button class="close-button"  on:click={() => window.location.href = '/'}>
+      <i class="bi bi-x-lg"></i>
     </button>
   </div>
 
-  <div class="registration-container animate-in">
-    <div class="form-section">
-      <div class="illustration">
-        <img src="/assets/register-illustration.svg" alt="Registration Illustration">
-      </div>
-      
-      <h2 class="form-label text-center">County Officer Registration</h2>
-      <p class="text-muted text-center">Complete your registration to access the system</p>
-
-      <form class="registration-form" on:submit|preventDefault={handleSubmit}>
-        <div class="row g-4">
-          <div class="col-md-6">
-            <div class="form-floating">
-              <input {...createInputProps('nationalId', 'text', formData.nationalId)} placeholder="National ID" required pattern="[0-9]{8}">
-              <label for="nationalId"><i class="bi bi-person-badge me-2"></i> National ID Number</label>
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="form-floating">
-              <input {...createInputProps('mobile', 'tel', formData.mobile)} placeholder="Mobile Number" required pattern="[0-9]{10}">
-              <label for="mobile"><i class="bi bi-phone me-2"></i> Mobile Number</label>
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="form-floating">
-              <input {...createInputProps('email', 'email', formData.email)} placeholder="Email Address" required>
-              <label for="email"><i class="bi bi-envelope me-2"></i> Email Address</label>
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="form-floating">
-              <select class="form-select" id="county" bind:value={formData.county} required>
-                <option value="">Select your county</option>
-                {#each counties as county}
-                  <option value={county.id}>{county.name}</option>
-                {/each}
-              </select>
-              <label for="county"><i class="bi bi-geo-alt me-2"></i> County</label>
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="form-floating">
-              <input {...createInputProps('password', 'password', formData.password)} placeholder="Password" required minlength="8">
-              <label for="password"><i class="bi bi-lock me-2"></i> Password</label>
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="form-floating">
-              <input {...createInputProps('confirmPassword', 'password', formData.confirmPassword)} placeholder="Confirm Password" required>
-              <label for="confirmPassword"><i class="bi bi-lock-check me-2"></i> Confirm Password</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="text-center mt-4">
-          <button type="submit" class="btn btn-primary w-100 py-3 mb-3">
-            <i class="bi bi-check-circle me-2"></i> Complete Registration
-          </button>
-          <p class="mb-0">Already registered? <a href="/login" class="text-decoration-none">Login here</a></p>
-        </div>
-      </form>
-    </div>
-  </div>
+    <form class="registration-form" on:submit|preventDefault={handleSubmit}>
+    <div class="form-header-container">
+ 
 </div>
+      <!-- Row 1: ID and County -->
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-floating">
+            <input {...createInputProps('nationalId', 'text', formData.nationalId)} 
+                   placeholder="National ID" required pattern="[0-9]{8}"/>
+            <label for="nationalId">
+              <i class="bi bi-person-badge"></i> National ID
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-floating">
+            <select id="countyOfBirth" class="form-select" 
+                    bind:value={formData.countyOfBirth} required>
+              <option value="">Select County</option>
+              {#each counties as county}
+                <option value={county}>{county}</option>
+              {/each}
+            </select>
+            <label for="countyOfBirth">
+              <i class="bi bi-geo-alt"></i> County of Birth
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: Name and Email -->
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-floating">
+            <input {...createInputProps('fullName', 'text', formData.fullName)} 
+                   placeholder="Full Name" required/>
+            <label for="fullName">
+              <i class="bi bi-person"></i> Full Name
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-floating">
+            <input {...createInputProps('email', 'email', formData.email)} 
+                   placeholder="Email" required/>
+            <label for="email">
+              <i class="bi bi-envelope"></i> Email Address
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3: Mobile -->
+     <!-- Row 3: Mobile -->
+      <div class="form-row mobile-row">
+        <div class="form-group mobile-group">
+          <div class="form-floating mobile-container">
+            <div class="input-group">
+              <span class="input-group-text">+254</span>
+              <input {...createInputProps('mobile', 'tel', formData.mobile)} 
+                    placeholder="Mobile Number" 
+                    required 
+                    pattern="[0-9]{9}"
+                    maxlength="9"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+
+      <!-- Row 4: Passwords -->
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-floating">
+            <input {...createInputProps('password', 'password', formData.password)} 
+                   placeholder="Password" required minlength="8"/>
+            <label for="password">
+              <i class="bi bi-lock"></i> Password
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-floating">
+            <input {...createInputProps('confirmPassword', 'password', formData.confirmPassword)} 
+                   placeholder="Confirm Password" required/>
+            <label for="confirmPassword">
+              <i class="bi bi-lock-check"></i> Confirm Password
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-button">
+        <i class="bi bi-check-circle"></i> Complete Registration
+      </button>
+
+      <div class="login-link">
+        Already registered? <a href="/login">Login here</a>
+      </div>
+    </form>
+  </div>
 
 <style>
-  /* Full-page container */
-  .page-container {
+
+.header-section {
+  width: 100%;
+  max-width: 2000px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.8rem;
+  padding: 0 1rem;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #27667B;
+  font-size: 1.8rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.close-button:hover {
+  background: rgba(39, 102, 123, 0.1);
+  transform: scale(1.1);
+}
+
+.form-header {
+  text-align: center;
+  flex-grow: 1;
+}
+  .page-wrapper {
+    min-height: 85vh;
+    width: 100%;
+    background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 0.5rem;
+  }
+
+ 
+
+  .form-header h2 {
+    font-size: 2.4rem;
+    color: #27667B;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+  }
+
+  .registration-form {
+    width: 99%;
+    max-width: 2000px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  }
+
+  .form-row {
+    display: flex;
+    gap: 2.5rem;
+    margin-bottom: 1.8rem;
+    width: 100%;
+  }
+ .form-row1 {
+    display: flex;
+    gap: 4.5rem;
+    margin-bottom: 1.8rem;
+    width: 100%;
+  }
+  .form-group {
+    flex: 1;
+    min-width: 450px;
+  }
+
+  .form-control, .form-select {
+    width: 100%;
+    height: 3.4rem;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid #27667B;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    transition: all 0.2s ease;
+    background: #ffffff;
+  }
+
+  .input-group {
+    display: flex;
+    height: 3.4rem;
+    width: 100%;
+  }
+
+  .input-group-text {
+    min-width: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-    padding: 2rem;
+    background: #f8fafc;
+    border: 1px solid #27667B;
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    color: #64748b;
+    font-weight: 500;
+    font-size: 1.05rem;
   }
 
-  /* Registration Container */
-  .registration-container {
-    max-width: 600px;
-    padding: 3rem;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-
-  /* Illustration */
-  .illustration {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-  }
-
-  .illustration img {
-    max-width: 150px;
-    opacity: 0.9;
-  }
-
-  /* Glassmorphism Form */
-  .form-section {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    padding: 2.5rem;
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
-  }
-
-  /* Floating Labels */
-  .form-control, .form-select {
-    padding: 1rem 1.2rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 15px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-  }
-
-  .form-control:focus, .form-select:focus {
-    border-color: #27667B;
-    box-shadow: 0 0 0 4px rgba(39, 102, 123, 0.15);
-    transform: translateY(-2px);
-  }
-
-  /* Buttons */
-  .btn {
-    padding: 1rem 2rem;
-    border-radius: 15px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-  }
-
-  .btn-primary {
-    background: linear-gradient(135deg, #27667B, #1e4f5f);
+  .submit-button {
+    width: 100%;
+    padding: 1.1rem;
+    background: #27667B;
+    color: white;
     border: none;
+    border-radius: 8px;
+    font-size: 1.15rem;
+    font-weight: 500;
+    margin-top: 2.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
   }
 
-  .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(39, 102, 123, 0.3);
-  }
-
-  /* Animations */
-  .animate-in {
-    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(40px);
+  @media (max-width: 1600px) {
+    .form-group {
+      min-width: 400px;
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+    .registration-form {
+      max-width: 1800px;
     }
   }
 
-  /* Responsive */
+  @media (max-width: 1200px) {
+    .form-group {
+      min-width: 350px;
+    }
+  }
+  .mobile-row {
+    margin-bottom: 2.5rem;
+    width: 100%;
+  }
+
+  .mobile-group {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .mobile-container {
+    width: 100%;
+  }
+
+  .mobile-container .input-group {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .mobile-container .input-group-text {
+    min-width: 80px;
+    background: #f8fafc;
+    border: 1px solid #e0e0e0;
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    height: 3.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    color: #64748b;
+  }
+
+  .mobile-container .form-control {
+    flex: 1;
+    border-left: none;
+    border-radius: 0 8px 8px 0;
+  }
+
+   /* Responsive Design Updates */
+  @media (max-width: 1600px) {
+    .registration-form {
+      max-width: 1400px;
+      padding: 2rem;
+    }
+    .form-group {
+      min-width: 350px;
+    }
+    .form-header h2 {
+      font-size: 2.2rem;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    .registration-form {
+      max-width: 1000px;
+      padding: 1.8rem;
+    }
+    .form-group {
+      min-width: 300px;
+    }
+    .form-row {
+      gap: 1.5rem;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .registration-form {
+      width: 95%;
+      padding: 1.5rem;
+    }
+    .form-row {
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .form-group {
+      min-width: 100%;
+    }
+    .form-header h2 {
+      font-size: 2rem;
+    }
+  }
+
   @media (max-width: 768px) {
-    .registration-container {
-      padding: 2rem;
+    .page-wrapper {
+      padding: 1rem 0.5rem;
     }
+    .registration-form {
+      width: 92%;
+      padding: 1.2rem;
+    }
+    .form-header h2 {
+      font-size: 1.8rem;
+    }
+    .header-section {
+      padding: 0 0.5rem;
+    }
+    .close-button {
+      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+    }
+    .submit-button {
+      padding: 0.9rem;
+      font-size: 1rem;
+    }
+  }
 
-    .form-section {
-      padding: 2rem;
+  @media (max-width: 480px) {
+    .registration-form {
+      width: 90%;
+      padding: 1rem;
+    }
+    .form-control, .form-select {
+      height: 3rem;
+      font-size: 0.95rem;
+    }
+    .input-group-text {
+      min-width: 60px;
+      font-size: 0.9rem;
+    }
+    .form-header h2 {
+      font-size: 1.6rem;
     }
   }
 </style>

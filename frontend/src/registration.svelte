@@ -116,14 +116,7 @@ onMount(() => {
     };
   }
 
-  function nextSection() {
-    const currentIndex = sections.findIndex(s => s.id === currentSection);
-    if (currentIndex < sections.length - 1) {
-      currentSection = sections[currentIndex + 1].id;
-      updateProgress();
-    }
-  }
-
+ 
   function previousSection() {
     const currentIndex = sections.findIndex(s => s.id === currentSection);
     if (currentIndex > 0) {
@@ -250,16 +243,7 @@ onMount(() => {
     return helpTexts[section] || 'Please fill in all required fields.';
   }
 
-  function validateField(field) {
-    if (!field.value && field.hasAttribute('required')) return false;
-    if (field.type === 'email' && field.value) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value);
-    }
-    if (field.pattern && field.value) {
-      return new RegExp(field.pattern).test(field.value);
-    }
-    return true;
-  }
+  
 
   function speakText(text) {
     if ('speechSynthesis' in window) {
@@ -303,7 +287,50 @@ onMount(() => {
 
 
 
+let formErrors = {
+    personal: {},
+    education: {},
+    nextOfKin: {}
+  };
 
+  let formTouched = {
+    personal: false,
+    education: false,
+    nextOfKin: false
+  };
+
+  function validateField(field, value, rules = {}) {
+    const errors = [];
+    if (rules.required && !value) errors.push('This field is required');
+    if (rules.pattern && value && !new RegExp(rules.pattern).test(value)) errors.push('Invalid format');
+    if (rules.minLength && value.length < rules.minLength) errors.push(`Minimum ${rules.minLength} characters required`);
+    return errors;
+  }
+
+  function isSectionComplete(sectionId) {
+    const section = userResponses[sectionId];
+    return Object.values(section).every(value => value !== '' && value !== null);
+  }
+
+  function getStepStatus(sectionId) {
+    if (currentSection === sectionId) return 'active';
+    if (isSectionComplete(sectionId)) return 'complete';
+    return '';
+  }
+
+  function nextSection() {
+    const currentIndex = sections.findIndex(s => s.id === currentSection);
+    if (currentIndex < sections.length - 1) {
+      const formSection = document.querySelector('.form-section');
+      formSection.classList.add('sliding-out');
+      
+      setTimeout(() => {
+        currentSection = sections[currentIndex + 1].id;
+        formSection.classList.remove('sliding-out');
+        formSection.classList.add('sliding-in');
+      }, 300);
+    }
+  }
 
 
 
@@ -930,4 +957,84 @@ onMount(() => {
       margin: 0.5rem 0;
     }
   }
+
+  .form-control.is-valid {
+    border-color: #198754;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+  }
+
+  .completion-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #198754;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+
+  .step-icon {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    background: #f8f9fa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  .step.complete .step-icon {
+    background: #198754;
+    color: white;
+  }
+
+  .form-section {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .form-section.sliding-out {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  .form-section.sliding-in {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  /* Additional modern styling */
+  .invalid-feedback {
+    display: block;
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+
+  .form-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+  }
+
+  .step.active .step-icon {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+
 </style>

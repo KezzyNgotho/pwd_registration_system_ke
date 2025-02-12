@@ -2,9 +2,19 @@
   import 'bootstrap/dist/css/bootstrap.min.css';
   import { onMount } from 'svelte';
   import 'bootstrap-icons/font/bootstrap-icons.css';
-  import Reg from '/home/keziah/pwd_reg_system/frontend/src/registration.svelte';
-  import CountyOfficerReg from '/home/keziah/pwd_reg_system/frontend/src/CountyRegistration.svelte';
-  import HealthOfficerReg from "/home/keziah/pwd_reg_system/frontend/src/HealthOfficerRegistration.svelte";
+  import Reg from '../src/registration.svelte';
+  import CountyOfficerReg from '../src/CountyRegistration.svelte';
+  import HealthOfficerReg from "../src/HealthOfficerRegistration.svelte";
+  import Login from "../src/login.svelte";
+  import { Router, Link, Route } from 'svelte-routing';
+  import PWDDashboard from "/home/keziah/pwd_reg_system/frontend/src/PWDDashboard.svelte"
+  import CountyOfficerDashboard from "/home/keziah/pwd_reg_system/frontend/src/CountyDashboard.svelte";
+  import { routes } from '../src/route.js';
+   let showLogin = false;
+  
+  let dashboardOpen = true; // Control the dashboard visibility
+  let dashboardoneOpen = true;
+
 
   let showRoleSelection = false;
   let showDisabilitySelection = false;
@@ -86,7 +96,7 @@ function handleDisabilitySelect(disability) {
   }
 
   function handleLoginClick() {
-    // Add your login logic here
+    showLogin = true;
   }
 
   const services = [
@@ -135,6 +145,8 @@ function handleDisabilitySelect(disability) {
     }
   };
 </script>
+
+
 
 <style>
   /* Modern Reset & Base Styles */
@@ -674,6 +686,28 @@ function handleDisabilitySelect(disability) {
   }
 </style>
 
+<Router>
+  <Route path="/pwd-dashboard">
+    <PWDDashboard isOpen={dashboardOpen} />
+  </Route>
+</Router>
+<Router>
+  <Route path="/county-dashboard">
+    <CountyOfficerDashboard isOpen={dashboardoneOpen} />
+  </Route>
+</Router>
+
+
+{#if showLogin}
+  <Login on:close={() => showLogin = false} />
+{:else if showReg}
+  <Reg role="pwd" disability={selectedDisability} />
+{:else if showCountyOfficerReg}
+  <CountyOfficerReg role="county Officer" />
+{:else if showHealthOfficerReg}
+  <HealthOfficerReg role="Health Officer" />
+  {/if}
+
 {#if showReg}
   <Reg role="pwd" disability={selectedDisability} />
 {:else if showCountyOfficerReg}
@@ -844,12 +878,14 @@ function handleDisabilitySelect(disability) {
             <input type="search" class="form-control" placeholder="Search...">
           </div>
         </div>
-        <button class="btn btn-outline-primary px-4">Login</button>
+        <button class="btn btn-outline-primary px-4"  on:click={handleLoginClick}>Login</button>
         <button class="btn btn-primary px-4"   on:click={handleGetStarted}>Register</button>
       </div>
     </div>
   </div>
 </nav>
+
+
 
 <!-- Hero Section with improved layout -->
 <section class="hero min-vh-100 d-flex align-items-center bg-white" style="padding-top: 5rem;">
@@ -959,6 +995,7 @@ function handleDisabilitySelect(disability) {
     </div>
   </div>
 </section>
+
 
 <!-- Services Section with enhanced cards -->
 <section class="py-5 bg-light">

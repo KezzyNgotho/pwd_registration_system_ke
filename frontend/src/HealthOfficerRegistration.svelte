@@ -13,32 +13,46 @@
 
   // Form Data
   let formData = {
-    nationalId: '',
-    password: '',
-    confirmPassword: '',
-    mobile: '',
+    licenseId: '',
+    fullName: '',
     email: '',
-    hospitalId: '',
-    medicalLicenseNumber: '',
-    specialization: ''
+    mobile: '',
+    countyOfBirth: '',
+    specialization: '',
+    password: '',
+    confirmPassword: ''
   };
 
-  const specializations = [
-    'General Medicine',
-    'Orthopedics',
-    'Ophthalmology',
-    'Psychiatry',
-    'Neurology',
-    'Physical Medicine'
+  // Counties Data
+  const counties = [
+    'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Kiambu', 'Machakos', 'Kajiado', 'Uasin Gishu'
   ];
 
-  function handleSubmit() {
-    // Handle health officer registration
-    console.log('Form submitted:', formData);
-  }
+  // Specializations
+  const specializations = [
+    'General Practice',
+    'Pediatrics',
+    'Obstetrics & Gynecology',
+    'Surgery',
+    'Internal Medicine',
+    'Psychiatry',
+    'Dermatology',
+    'Ophthalmology',
+    'Public Health',
+    'Family Medicine'
+  ];
 
-  function handleInputChange(field, value) {
-    formData[field] = value;
+  // Helper Functions
+  function createInputProps(name, type, value) {
+    return {
+      id: name,
+      type,
+      value,
+      class: 'form-control',
+      'on:input': (e) => formData[name] = e.target.value,
+      'on:focus': handleFieldFocus,
+      'on:blur': (e) => assistiveTools?.handleFieldValidation(e.target)
+    };
   }
 
   function handleFieldFocus(event) {
@@ -47,395 +61,403 @@
     }
   }
 
-  function speakText(text) {
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      window.speechSynthesis.speak(utterance);
-    }
+  function handleSubmit() {
+    console.log('Health Officer Data:', formData);
   }
 </script>
 
-<div class="container-fluid bg-light min-vh-100 d-flex align-items-center py-5">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-10 col-lg-8">
-        <div class="card border-0 shadow-lg">
-          <div class="card-body p-5">
-            <!-- Header Section remains unchanged -->
+<div class="page-wrapper">
+  <div class="header-section">
+    <div class="form-header">
+      <h2>Health Officer Registration</h2>
+      <p>Complete your professional registration details</p>
+    </div>
+    <button class="close-button" on:click={() => window.location.href = '/'}>
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
 
-            <!-- Registration Form -->
-            <form on:submit|preventDefault={handleSubmit}>
-              <div class="row g-4">
-                <!-- First Row -->
-                <div class="col-md-6">
-                  <div class="form-floating">
-                    <input 
-                      type="text" 
-                      class="form-control" 
-                      id="nationalId"
-                      placeholder="National ID"
-                      bind:value={formData.nationalId}
-                      required
-                      pattern="[0-9]{8}"
-                      on:focus={handleFieldFocus}
-                      on:blur={(e) => assistiveTools?.handleFieldValidation(e.target)}
-                    >
-                    <label for="nationalId">
-                      <i class="bi bi-person-badge me-2"></i>
-                      National ID Number
-                    </label>
-                  </div>
-                </div>
+  <form class="registration-form" on:submit|preventDefault={handleSubmit}>
+    <!-- License ID and County -->
+    <div class="form-row">
+      <div class="form-group">
+        <div class="form-floating">
+          <input {...createInputProps('licenseId', 'text', formData.licenseId)} 
+                 placeholder="License ID" required pattern="[A-Z0-9]{8}"/>
+          <label for="licenseId">
+            <i class="bi bi-shield-check"></i> Medical License ID
+          </label>
+        </div>
+      </div>
 
-                <div class="col-md-6">
-                  <div class="form-floating">
-                    <input 
-                      type="text" 
-                      class="form-control" 
-                      id="medicalLicenseNumber"
-                      placeholder="Medical License Number"
-                      bind:value={formData.medicalLicenseNumber}
-                      required
-                      on:focus={handleFieldFocus}
-                      on:blur={(e) => assistiveTools?.handleFieldValidation(e.target)}
-                    >
-                    <label for="medicalLicenseNumber">
-                      <i class="bi bi-file-medical me-2"></i>
-                      Medical License Number
-                    </label>
-                  </div>
-                </div>
-
-                <!-- Second Row -->
-                <div class="col-md-6">
-                  <div class="form-floating">
-                    <input 
-                      type="text" 
-                      class="form-control" 
-                      id="hospitalId"
-                      placeholder="Hospital ID"
-                      bind:value={formData.hospitalId}
-                      required
-                      on:focus={handleFieldFocus}
-                      on:blur={(e) => assistiveTools?.handleFieldValidation(e.target)}
-                    >
-                    <label for="hospitalId">
-                      <i class="bi bi-building-add me-2"></i>
-                      Hospital ID
-                    </label>
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <div class="form-floating">
-                    <select 
-                      class="form-select" 
-                      id="specialization"
-                      bind:value={formData.specialization}
-                      required
-                      on:focus={handleFieldFocus}
-                      on:blur={(e) => assistiveTools?.handleFieldValidation(e.target)}
-                    >
-                      <option value="">Select specialization</option>
-                      {#each specializations as specialization}
-                        <option value={specialization}>{specialization}</option>
-                      {/each}
-                    </select>
-                    <label for="specialization">
-                      <i class="bi bi-stars me-2"></i>
-                      Specialization
-                    </label>
-                  </div>
-                </div>
-
-                <!-- Third Row -->
-                <div class="col-md-6">
-                  <div class="form-floating">
-                    <input 
-                      type="password" 
-                      class="form-control" 
-                      id="password"
-                      placeholder="Password"
-                      bind:value={formData.password}
-                      required
-                      minlength="8"
-                      on:focus={handleFieldFocus}
-                      on:blur={(e) => assistiveTools?.handleFieldValidation(e.target)}
-                    >
-                    <label for="password">
-                      <i class="bi bi-lock me-2"></i>
-                      Password
-                    </label>
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <div class="form-floating">
-                    <input 
-                      type="password" 
-                      class="form-control" 
-                      id="confirmPassword"
-                      placeholder="Confirm Password"
-                      bind:value={formData.confirmPassword}
-                      required
-                      on:focus={handleFieldFocus}
-                      on:blur={(e) => assistiveTools?.handleFieldValidation(e.target)}
-                    >
-                    <label for="confirmPassword">
-                      <i class="bi bi-lock-check me-2"></i>
-                      Confirm Password
-                    </label>
-                  </div>
-                </div>
-
-                <!-- Fourth Row -->
-                <div class="col-md-6">
-                  <div class="form-floating">
-                    <input 
-                      type="tel" 
-                      class="form-control" 
-                      id="mobile"
-                      placeholder="Mobile Number"
-                      bind:value={formData.mobile}
-                      required
-                      pattern="[0-9]{10}"
-                      on:focus={handleFieldFocus}
-                      on:blur={(e) => assistiveTools?.handleFieldValidation(e.target)}
-                    >
-                    <label for="mobile">
-                      <i class="bi bi-phone me-2"></i>
-                      Mobile Number
-                    </label>
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <div class="form-floating">
-                    <input 
-                      type="email" 
-                      class="form-control" 
-                      id="email"
-                      placeholder="Email Address"
-                      bind:value={formData.email}
-                      required
-                      on:focus={handleFieldFocus}
-                      on:blur={(e) => assistiveTools?.handleFieldValidation(e.target)}
-                    >
-                    <label for="email">
-                      <i class="bi bi-envelope me-2"></i>
-                      Email Address
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Submit Button and Login Link remain unchanged -->
-                <button type="submit" class="btn btn-primary w-100 py-3 mb-3">
-                <i class="bi bi-check-circle me-2"></i>
-                Complete Registration
-              </button>
-
-              <!-- Login Link -->
-              <p class="text-center mb-0">
-                Already registered? 
-                <a href="/login" class="text-decoration-none">Login here</a>
-              </p>
-            </form>
-          </div>
+      <div class="form-group">
+        <div class="form-floating">
+          <select id="specialization" class="form-select" 
+                  bind:value={formData.specialization} required>
+            <option value="">Select Specialization</option>
+            {#each specializations as spec}
+              <option value={spec}>{spec}</option>
+            {/each}
+          </select>
+          <label for="specialization">
+            <i class="bi bi-stars"></i> Specialization
+          </label>
         </div>
       </div>
     </div>
-  </div>
+
+    <!-- Name and Email -->
+    <div class="form-row">
+      <div class="form-group">
+        <div class="form-floating">
+          <input {...createInputProps('fullName', 'text', formData.fullName)} 
+                 placeholder="Full Name" required/>
+          <label for="fullName">
+            <i class="bi bi-person-badge"></i> Full Name
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-floating">
+          <input {...createInputProps('email', 'email', formData.email)} 
+                 placeholder="Email" required/>
+          <label for="email">
+            <i class="bi bi-envelope"></i> Professional Email
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile and County -->
+    <div class="form-row">
+      <div class="form-group">
+        <div class="form-floating">
+          <div class="input-group">
+            <span class="input-group-text">+254</span>
+            <input {...createInputProps('mobile', 'tel', formData.mobile)} 
+                   placeholder="Mobile Number" required pattern="[0-9]{9}" maxlength="9"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-floating">
+          <select id="countyOfBirth" class="form-select" 
+                  bind:value={formData.countyOfBirth} required>
+            <option value="">Select County</option>
+            {#each counties as county}
+              <option value={county}>{county}</option>
+            {/each}
+          </select>
+          <label for="countyOfBirth">
+            <i class="bi bi-geo-alt"></i> County of Birth
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Passwords -->
+    <div class="form-row">
+      <div class="form-group">
+        <div class="form-floating">
+          <input {...createInputProps('password', 'password', formData.password)} 
+                 placeholder="Password" required minlength="8"/>
+          <label for="password">
+            <i class="bi bi-lock"></i> Password
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-floating">
+          <input {...createInputProps('confirmPassword', 'password', formData.confirmPassword)} 
+                 placeholder="Confirm Password" required/>
+          <label for="confirmPassword">
+            <i class="bi bi-lock-check"></i> Confirm Password
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-button">
+      <i class="bi bi-check-circle"></i> Complete Professional Registration
+    </button>
+
+    <div class="login-link">
+      Already registered? <a href="/login">Login here</a>
+    </div>
+  </form>
 </div>
 
-
-
 <style>
-  /* Add styles for gesture feedback */
-  .gesture-feedback {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 2rem;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-  }
 
-  .gesture-feedback.active {
-    opacity: 1;
-  }
+.header-section {
+  width: 100%;
+  max-width: 2000px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.8rem;
+  padding: 0 1rem;
+}
 
-  /* Add styles for assistive controls */
-  .assistive-controls {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    display: flex;
-    gap: 1rem;
-    z-index: 1000;
-  }
+.close-button {
+  background: none;
+  border: none;
+  color: #27667B;
+  font-size: 1.8rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
 
-  .btn-voice, .btn-help {
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #27667B;
-    color: white;
-    box-shadow: 0 4px 15px rgba(39, 102, 123, 0.3);
-  }
+.close-button:hover {
+  background: rgba(39, 102, 123, 0.1);
+  transform: scale(1.1);
+}
 
-  /* Modern Container Styles */
-  .registration-container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 3rem;
-    background: linear-gradient(145deg, #ffffff, #f8f9fa);
-    border-radius: 30px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-  }
-
-  /* Glassmorphism Form Sections */
-  .form-section {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    padding: 2.5rem;
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-  }
-
-  /* Enhanced Progress Bar */
-  .progress-wrapper {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 2rem;
-    border-radius: 20px;
-    margin-bottom: 2rem;
-  }
-
-  .progress {
-    height: 15px !important;
-    background: #e9ecef;
-    border-radius: 15px;
-    overflow: hidden;
-  }
-
-  .progress-bar {
-    background: linear-gradient(90deg, #27667B, #4CAF50);
-    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* Modern Form Controls */
-  .form-control, .form-select {
-    padding: 1rem 1.2rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 15px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.9);
-  }
-
-  .form-control:focus, .form-select:focus {
-    border-color: #27667B;
-    box-shadow: 0 0 0 4px rgba(39, 102, 123, 0.15);
-    transform: translateY(-2px);
-  }
-
-  /* Floating Labels */
-  .form-label {
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 0.7rem;
-    transition: all 0.3s ease;
-  }
-
-  /* Enhanced Buttons */
-  .btn {
-    padding: 1rem 2rem;
-    border-radius: 15px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-transform: uppercase;
-    font-size: 0.9rem;
-  }
-
-  .btn-primary {
-    background: linear-gradient(135deg, #27667B, #1e4f5f);
-    border: none;
-    box-shadow: 0 4px 15px rgba(39, 102, 123, 0.2);
-  }
-
-  .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(39, 102, 123, 0.3);
-  }
-
-  /* Section Navigation */
-  .progress-steps {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 1.5rem;
-    padding: 0 1rem;
-  }
-
-  .step {
+.form-header {
+  text-align: center;
+  flex-grow: 1;
+}
+  .page-wrapper {
+    min-height: 85vh;
+    width: 100%;
+    background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.8rem;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    padding: 1rem;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.6);
+    padding: 1.5rem 0.5rem;
   }
 
-  .step.active {
-    background: rgba(39, 102, 123, 0.1);
-    transform: scale(1.05);
+ 
+
+  .form-header h2 {
+    font-size: 2.4rem;
     color: #27667B;
+    margin-bottom: 0.4rem;
     font-weight: 600;
+    letter-spacing: -0.5px;
   }
 
-  /* Animations */
-  .animate-in {
-    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  .registration-form {
+    width: 99%;
+    max-width: 2000px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   }
 
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(40px);
+  .form-row {
+    display: flex;
+    gap: 2.5rem;
+    margin-bottom: 1.8rem;
+    width: 100%;
+  }
+ .form-row1 {
+    display: flex;
+    gap: 4.5rem;
+    margin-bottom: 1.8rem;
+    width: 100%;
+  }
+  .form-group {
+    flex: 1;
+    min-width: 450px;
+  }
+
+  .form-control, .form-select {
+    width: 100%;
+    height: 3.4rem;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid #27667B;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    transition: all 0.2s ease;
+    background: #ffffff;
+  }
+
+  .input-group {
+    display: flex;
+    height: 3.4rem;
+    width: 100%;
+  }
+
+  .input-group-text {
+    min-width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
+    border: 1px solid #27667B;
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    color: #64748b;
+    font-weight: 500;
+    font-size: 1.05rem;
+  }
+
+  .submit-button {
+    width: 100%;
+    padding: 1.1rem;
+    background: #27667B;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.15rem;
+    font-weight: 500;
+    margin-top: 2.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  @media (max-width: 1600px) {
+    .form-group {
+      min-width: 400px;
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+    .registration-form {
+      max-width: 1800px;
     }
   }
 
-  /* Responsive Design */
+  @media (max-width: 1200px) {
+    .form-group {
+      min-width: 350px;
+    }
+  }
+  .mobile-row {
+    margin-bottom: 2.5rem;
+    width: 100%;
+  }
+
+  .mobile-group {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .mobile-container {
+    width: 100%;
+  }
+
+  .mobile-container .input-group {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .mobile-container .input-group-text {
+    min-width: 80px;
+    background: #f8fafc;
+    border: 1px solid #e0e0e0;
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    height: 3.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    color: #64748b;
+  }
+
+  .mobile-container .form-control {
+    flex: 1;
+    border-left: none;
+    border-radius: 0 8px 8px 0;
+  }
+
+   /* Responsive Design Updates */
+  @media (max-width: 1600px) {
+    .registration-form {
+      max-width: 1400px;
+      padding: 2rem;
+    }
+    .form-group {
+      min-width: 350px;
+    }
+    .form-header h2 {
+      font-size: 2.2rem;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    .registration-form {
+      max-width: 1000px;
+      padding: 1.8rem;
+    }
+    .form-group {
+      min-width: 300px;
+    }
+    .form-row {
+      gap: 1.5rem;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .registration-form {
+      width: 95%;
+      padding: 1.5rem;
+    }
+    .form-row {
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .form-group {
+      min-width: 100%;
+    }
+    .form-header h2 {
+      font-size: 2rem;
+    }
+  }
+
   @media (max-width: 768px) {
-    .registration-container {
-      padding: 1.5rem;
-      margin: 1rem;
+    .page-wrapper {
+      padding: 1rem 0.5rem;
     }
-
-    .form-section {
-      padding: 1.5rem;
+    .registration-form {
+      width: 92%;
+      padding: 1.2rem;
     }
+    .form-header h2 {
+      font-size: 1.8rem;
+    }
+    .header-section {
+      padding: 0 0.5rem;
+    }
+    .close-button {
+      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+    }
+    .submit-button {
+      padding: 0.9rem;
+      font-size: 1rem;
+    }
+  }
 
-    .btn {
-      width: 100%;
-      margin: 0.5rem 0;
+  @media (max-width: 480px) {
+    .registration-form {
+      width: 90%;
+      padding: 1rem;
+    }
+    .form-control, .form-select {
+      height: 3rem;
+      font-size: 0.95rem;
+    }
+    .input-group-text {
+      min-width: 60px;
+      font-size: 0.9rem;
+    }
+    .form-header h2 {
+      font-size: 1.6rem;
     }
   }
 </style>
