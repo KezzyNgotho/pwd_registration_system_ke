@@ -796,75 +796,145 @@ function handleDisabilitySelect(disability) {
 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm py-2">
   <div class="container">
     <a class="navbar-brand fs-4 fw-bold" style="color: #27667B" href="/">
-      <i class="bi bi-heart-pulse me-2"></i>PWD Connect
+      <i class="bi bi-heart-pulse me-2" aria-hidden="true"></i>
+      <span>PWD Connect</span>
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    
+    <button 
+      class="navbar-toggler" 
+      type="button" 
+      data-bs-toggle="collapse" 
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation menu"
+    >
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav mx-auto">
-        <li class="nav-item px-2">
-          <a class="nav-link" href="#home">Home</a>
-        </li>
+  <li class="nav-item px-2">
+    <a class="nav-link" href="/home" aria-current="page">Home</a>
+  </li>
 
-        <li class="nav-item dropdown px-2">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            About Us
-          </a>
-          <ul class="dropdown-menu border-0 shadow-sm">
-            <li><a class="dropdown-item" href="#mission">Our Mission</a></li>
-            <li><a class="dropdown-item" href="#team">Our Team</a></li>
-            <li><a class="dropdown-item" href="#partners">Partners</a></li>
-          </ul>
-        </li>
+  <li class="nav-item dropdown px-2">
+    <button 
+      class="nav-link dropdown-toggle" 
+      id="aboutDropdownBtn"
+      aria-expanded="false"
+      aria-controls="aboutDropdown"
+      data-bs-toggle="dropdown"
+    >
+      About Us
+    </button>
+    <ul class="dropdown-menu border-0 shadow-sm" id="aboutDropdown">
+      <li><a class="dropdown-item" href="/mission">Our Mission</a></li>
+      <li><a class="dropdown-item" href="/team">Our Team</a></li>
+      <li><a class="dropdown-item" href="/partners">Partners</a></li>
+    </ul>
+  </li>
 
-        <li class="nav-item dropdown px-2">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            Services
-          </a>
-          <ul class="dropdown-menu border-0 shadow-sm">
-            <li><a class="dropdown-item" href="#registration">PWD Registration</a></li>
-            <li><a class="dropdown-item" href="#benefits">Benefits Management</a></li>
-            <li><a class="dropdown-item" href="#support">Support Services</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#special">Special Programs</a></li>
-          </ul>
-        </li>
+  <li class="nav-item dropdown px-2">
+    <button 
+      class="nav-link dropdown-toggle" 
+      id="servicesDropdownBtn"
+      aria-expanded="false"
+      aria-controls="servicesDropdown"
+      data-bs-toggle="dropdown"
+    >
+      Services
+    </button>
+    <ul class="dropdown-menu border-0 shadow-sm" id="servicesDropdown">
+      <li><a class="dropdown-item" href="/services/registration">Registration</a></li>
+      <li><a class="dropdown-item" href="/services/benefits">Benefits</a></li>
+    </ul>
+  </li>
 
-        <li class="nav-item dropdown px-2">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            Resources
-          </a>
-          <ul class="dropdown-menu border-0 shadow-sm">
-            <li><a class="dropdown-item" href="#guides">User Guides</a></li>
-            <li><a class="dropdown-item" href="#faq">FAQs</a></li>
-            <li><a class="dropdown-item" href="#downloads">Downloads</a></li>
-          </ul>
-        </li>
+  <!-- Search Button -->
+  <button 
+    class="btn btn-link text-decoration-none p-0" 
+    type="button"
+    id="searchBtn"
+    aria-label="Open search"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    <i class="bi bi-search fs-5" style="color: #27667B" aria-hidden="true"></i>
+  </button>
 
-        <li class="nav-item dropdown px-2">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            Support
-          </a>
-          <ul class="dropdown-menu border-0 shadow-sm">
-            <li><a class="dropdown-item" href="#helpdesk">Help Desk</a></li>
-            <li><a class="dropdown-item" href="#contact">Contact Us</a></li>
-            <li><a class="dropdown-item" href="#feedback">Feedback</a></li>
-          </ul>
-        </li>
-      </ul>
 
-      <div class="d-flex gap-3 align-items-center">
+       <li class="nav-item dropdown px-2">
+  <button 
+    class="nav-link dropdown-toggle" 
+    id="resourcesDropdownBtn"
+    aria-expanded="false"
+    aria-controls="resourcesDropdown"
+    data-bs-toggle="dropdown"
+  >
+    Resources
+  </button>
+  <ul class="dropdown-menu border-0 shadow-sm" id="resourcesDropdown">
+    <li><a class="dropdown-item" href="/resources/guides">User Guides</a></li>
+    <li><a class="dropdown-item" href="/resources/faqs">FAQs</a></li>
+    <li><a class="dropdown-item" href="/resources/downloads">Downloads</a></li>
+  </ul>
+</li>
+
+<li class="nav-item dropdown px-2">
+  <button 
+    class="nav-link dropdown-toggle" 
+    id="supportDropdownBtn"
+    aria-expanded="false"
+    aria-controls="supportDropdown"
+    data-bs-toggle="dropdown"
+  >
+    Support
+  </button>
+  <ul class="dropdown-menu border-0 shadow-sm" id="supportDropdown">
+    <li><a class="dropdown-item" href="/support/contact">Contact Us</a></li>
+    <li><a class="dropdown-item" href="/support/help">Help Center</a></li>
+    <li><a class="dropdown-item" href="/support/ticket">Submit Ticket</a></li>
+  </ul>
+</li>
+
+
+       <div class="d-flex gap-3 align-items-center">
         <div class="dropdown">
-          <button class="btn btn-link text-decoration-none p-0" data-bs-toggle="dropdown">
-            <i class="bi bi-search fs-5" style="color: #27667B"></i>
+          <button 
+            class="btn btn-link text-decoration-none p-0" 
+            type="button"
+            aria-label="Search"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="bi bi-search fs-5" style="color: #27667B" aria-hidden="true"></i>
           </button>
           <div class="dropdown-menu dropdown-menu-end p-3 border-0 shadow-sm" style="width: 300px">
-            <input type="search" class="form-control" placeholder="Search...">
+            <input 
+              type="search" 
+              class="form-control" 
+              placeholder="Search..."
+              aria-label="Search input"
+            >
           </div>
         </div>
-        <button class="btn btn-outline-primary px-4"  on:click={handleLoginClick}>Login</button>
-        <button class="btn btn-primary px-4"   on:click={handleGetStarted}>Register</button>
+        
+        <button 
+          class="btn btn-outline-primary px-4" 
+          type="button"
+          on:click={handleLoginClick}
+        >
+          Login
+        </button>
+        
+        <button 
+          class="btn btn-primary px-4" 
+          type="button"
+          on:click={handleGetStarted}
+        >
+          Register
+        </button>
       </div>
     </div>
   </div>
@@ -1042,39 +1112,73 @@ function handleDisabilitySelect(disability) {
         <h5 class="fw-bold mb-4" style="color: #27667B">PWD Connect</h5>
         <p class="text-muted small">Empowering lives through accessible support and comprehensive services for Persons with Disabilities.</p>
         <div class="social-links mt-4">
-          <a href="#" class="text-muted me-3"><i class="bi bi-facebook"></i></a>
-          <a href="#" class="text-muted me-3"><i class="bi bi-twitter"></i></a>
-          <a href="#" class="text-muted"><i class="bi bi-instagram"></i></a>
-        </div>
+  <a href="/social/facebook" class="text-muted me-3" aria-label="Visit our Facebook page">
+    <i class="bi bi-facebook" aria-hidden="true"></i>
+  </a>
+  <a href="/social/twitter" class="text-muted me-3" aria-label="Visit our Twitter page">
+    <i class="bi bi-twitter" aria-hidden="true"></i>
+  </a>
+  <a href="/social/instagram" class="text-muted" aria-label="Visit our Instagram page">
+    <i class="bi bi-instagram" aria-hidden="true"></i>
+  </a>
+</div>
       </div>
+
       <div class="col-lg-2">
         <h6 class="fw-bold mb-4">Quick Links</h6>
         <ul class="list-unstyled">
           {#each footerLinks.quickLinks as link}
-            <li class="mb-2"><a href="#" class="text-muted text-decoration-none">{link}</a></li>
+            <li class="mb-2">
+              <a href="/links/{link.toLowerCase().replace(/\s+/g, '-')}" class="text-muted text-decoration-none">
+                {link}
+              </a>
+            </li>
           {/each}
         </ul>
       </div>
+
       <div class="col-lg-2">
         <h6 class="fw-bold mb-4">Support</h6>
         <ul class="list-unstyled">
           {#each footerLinks.support as link}
-            <li class="mb-2"><a href="#" class="text-muted text-decoration-none">{link}</a></li>
+            <li class="mb-2">
+              <a href="/support/{link.toLowerCase().replace(/\s+/g, '-')}" class="text-muted text-decoration-none">
+                {link}
+              </a>
+            </li>
           {/each}
         </ul>
       </div>
+
       <div class="col-lg-4">
         <h6 class="fw-bold mb-4">Contact Us</h6>
         <ul class="list-unstyled">
-          <li class="mb-2"><i class="bi bi-envelope me-2"></i>{footerLinks.contact.email}</li>
-          <li class="mb-2"><i class="bi bi-telephone me-2"></i>{footerLinks.contact.phone}</li>
-          <li class="mb-2"><i class="bi bi-geo-alt me-2"></i>{footerLinks.contact.address}</li>
+          <li class="mb-2">
+            <i class="bi bi-envelope me-2" aria-hidden="true"></i>
+            <a href="mailto:{footerLinks.contact.email}" class="text-muted text-decoration-none">
+              {footerLinks.contact.email}
+            </a>
+          </li>
+          <li class="mb-2">
+            <i class="bi bi-telephone me-2" aria-hidden="true"></i>
+            <a href="tel:{footerLinks.contact.phone}" class="text-muted text-decoration-none">
+              {footerLinks.contact.phone}
+            </a>
+          </li>
+          <li class="mb-2">
+            <i class="bi bi-geo-alt me-2" aria-hidden="true"></i>
+            <a href="/location" class="text-muted text-decoration-none">
+              {footerLinks.contact.address}
+            </a>
+          </li>
         </ul>
       </div>
     </div>
+
     <div class="border-top mt-5 pt-4 text-center">
       <p class="small text-muted mb-0">&copy; 2025 PWD Access. All rights reserved.</p>
     </div>
   </div>
 </footer>
+
 {/if}
