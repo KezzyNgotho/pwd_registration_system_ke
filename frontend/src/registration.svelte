@@ -58,15 +58,11 @@ onMount(() => {
       dateOfBirth: '',
       gender: '',
       maritalStatus: '',
-      nationality: '',
-      religion: '',
       mobileNumber: '',
       emailAddress: '',
       county: '',
       subCounty: '',
-      ward: '',
-      postalAddress: '',
-      residentialAddress: ''
+     
     },
     educationInfo: {
       noFormalEducation: false,
@@ -81,13 +77,7 @@ onMount(() => {
     nextOfKin: {
       name: '',
       relationship: '',
-      county: '',
-      subCounty: '',
       mobileNumber: '',
-      emailAddress: '',
-      postalAddress: '',
-      physicalAddress: '',
-      occupation: '',
       alternativeContact: ''
     }
   };
@@ -201,15 +191,12 @@ onMount(() => {
       dateOfBirth: 'personalInfo',
       gender: 'personalInfo',
       maritalStatus: 'personalInfo',
-      nationality: 'personalInfo',
-      religion: 'personalInfo',
+     
       mobileNumber: 'personalInfo',
       emailAddress: 'personalInfo',
       county: 'personalInfo',
       subCounty: 'personalInfo',
-      ward: 'personalInfo',
-      postalAddress: 'personalInfo',
-      residentialAddress: 'personalInfo',
+     
       
       highestLevel: 'educationInfo',
       institution: 'educationInfo',
@@ -219,13 +206,9 @@ onMount(() => {
       
       kinName: 'nextOfKin',
       kinRelationship: 'nextOfKin',
-      kinCounty: 'nextOfKin',
-      kinSubCounty: 'nextOfKin',
+      
       kinMobileNumber: 'nextOfKin',
-      kinEmailAddress: 'nextOfKin',
-      kinPostalAddress: 'nextOfKin',
-      kinPhysicalAddress: 'nextOfKin',
-      kinOccupation: 'nextOfKin',
+      
       kinAlternativeContact: 'nextOfKin'
     };
     
@@ -268,16 +251,21 @@ onMount(() => {
   }
 
   function validateForm() {
-    const requiredFields = document.querySelectorAll('[required]');
-    let isValid = true;
-    requiredFields.forEach(field => {
+  const requiredSections = ['personalInfo', 'nextOfKin'];
+  let isValid = true;
+  
+  requiredSections.forEach(section => {
+    const fields = document.querySelectorAll(`[data-section="${section}"][required]`);
+    fields.forEach(field => {
       if (!validateField(field)) {
         isValid = false;
-        field.classList.add('is-invalid');
       }
     });
-    return isValid;
-  }
+  });
+
+  return isValid;
+}
+
 
   async function submitFormData(data) {
     // Implement your API call here
@@ -439,22 +427,7 @@ let formErrors = {
           </select>
         </div>
 
-        <div class="col-md-6">
-          <label for="nationality" class="form-label">Nationality</label>
-          <input 
-            {...createInputProps('nationality', 'text', userResponses.personalInfo.nationality)}
-            placeholder="Enter your nationality"
-          />
-        </div>
-
-        <div class="col-md-6">
-          <label for="religion" class="form-label">Religion</label>
-          <input 
-            {...createInputProps('religion', 'text', userResponses.personalInfo.religion)}
-            placeholder="Enter your religion"
-          />
-        </div>
-
+      
         <div class="col-md-6">
           <label for="mobileNumber" class="form-label">Mobile Number</label>
           <div class="input-group">
@@ -494,35 +467,10 @@ let formErrors = {
             {/each}
           </select>
         </div>
-
-        <div class="col-md-4">
-          <label for="ward" class="form-label">Ward</label>
-          <input 
-            {...createInputProps('ward', 'text', userResponses.personalInfo.ward)}
-            placeholder="Enter your ward"
-          />
-        </div>
-
-        <div class="col-md-6">
-          <label for="postalAddress" class="form-label">Postal Address</label>
-          <input 
-            {...createInputProps('postalAddress', 'text', userResponses.personalInfo.postalAddress)}
-            placeholder="P.O. Box XXX-XXXXX"
-          />
-        </div>
-
-        <div class="col-md-6">
-          <label for="residentialAddress" class="form-label">Residential Address</label>
-          <input 
-            {...createInputProps('residentialAddress', 'text', userResponses.personalInfo.residentialAddress)}
-            placeholder="Enter your physical address"
-          />
-        </div>
+      
       </div>
     </div>
   {/if}
-
-
 
     {#if currentSection === 'education'}
   <div class="form-section animate-in" role="tabpanel">
@@ -663,25 +611,6 @@ let formErrors = {
         </select>
       </div>
 
-      <div class="col-md-4">
-        <label for="kinCounty" class="form-label">County</label>
-        <select {...createSelectProps('kinCounty', userResponses.nextOfKin.county)}>
-          <option value="">Select County</option>
-          {#each counties as county}
-            <option value={county}>{county}</option>
-          {/each}
-        </select>
-      </div>
-
-      <div class="col-md-4">
-        <label for="kinSubCounty" class="form-label">Sub-County</label>
-        <select {...createSelectProps('kinSubCounty', userResponses.nextOfKin.subCounty)}>
-          <option value="">Select Sub-County</option>
-          {#each locationData[userResponses.nextOfKin.county]?.subCounties || [] as subCounty}
-            <option value={subCounty}>{subCounty}</option>
-          {/each}
-        </select>
-      </div>
 
       <div class="col-md-4">
         <label for="kinMobileNumber" class="form-label">Mobile Number</label>
@@ -696,37 +625,6 @@ let formErrors = {
         </div>
       </div>
 
-      <div class="col-md-6">
-        <label for="kinEmailAddress" class="form-label">Email Address</label>
-        <input 
-          {...createInputProps('kinEmailAddress', 'email', userResponses.nextOfKin.emailAddress)}
-          placeholder="example@email.com"
-        />
-      </div>
-
-      <div class="col-md-6">
-        <label for="kinPostalAddress" class="form-label">Postal Address</label>
-        <input 
-          {...createInputProps('kinPostalAddress', 'text', userResponses.nextOfKin.postalAddress)}
-          placeholder="P.O. Box XXX-XXXXX"
-        />
-      </div>
-
-      <div class="col-md-12">
-        <label for="kinPhysicalAddress" class="form-label">Physical Address</label>
-        <input 
-          {...createInputProps('kinPhysicalAddress', 'text', userResponses.nextOfKin.physicalAddress)}
-          placeholder="Enter physical address"
-        />
-      </div>
-
-      <div class="col-md-6">
-        <label for="kinOccupation" class="form-label">Occupation</label>
-        <input 
-          {...createInputProps('kinOccupation', 'text', userResponses.nextOfKin.occupation)}
-          placeholder="Enter occupation"
-        />
-      </div>
 
       <div class="col-md-6">
         <label for="kinAlternativeContact" class="form-label">Alternative Contact</label>
@@ -826,8 +724,9 @@ let formErrors = {
   .form-section {
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
-    padding: 2.5rem;
+    padding: 1.5rem;
     border-radius: 20px;
+     margin-bottom: 1rem;
     box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.18);
   }
@@ -854,13 +753,18 @@ let formErrors = {
 
   /* Modern Form Controls */
   .form-control, .form-select {
-    padding: 1rem 1.2rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 15px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.9);
-  }
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  border-radius: 8px;
+}
+
+
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+}
+
 
   .form-control:focus, .form-select:focus {
     border-color: #27667B;

@@ -1,10 +1,39 @@
 <script>
 import { user } from '../src/authstore';
+ import { pwdDashboardState } from '/home/keziah/pwd_reg_system/frontend/src/dashboardStore.js';
+
+ // Subscribe to dashboard state
+  
+// Enhanced menu click handler
+function handleMenuClick(item) {
+  if (item.view === 'logout') {
+    handleLogout();
+  } else {
+    currentView = item.view;
+  }
+}
+
+// Robust logout handler
+function handleLogout() {
+  localStorage.removeItem('userSession');
+  user.set(null);
+  window.location.href = '/login';
+}
 
 
-  function handleLogout() {
-    logout();
-    navigate('/login');
+ // Initialize state
+  let state = $pwdDashboardState;
+  // Single declaration of isOpen
+  export let isOpen = false;
+
+  function toggleSidebar() {
+    isOpen = !isOpen;
+  }
+
+ 
+// Update userData when store changes
+  $: if ($user) {
+    userData = $user;
   }
 
 // Default user data
@@ -82,12 +111,7 @@ function formatAddress(address) {
 }
 
 
-  // Update userData when store changes
-  $: if ($user) {
-    userData = $user;
-  }
-  
-  export let isOpen = false;
+
   
   let currentView = 'profile';
   
@@ -97,12 +121,18 @@ function formatAddress(address) {
     { icon: 'bi-calendar-event', label: 'Appointments', view: 'appointments' },
     { icon: 'bi-file-earmark-text', label: 'Documents', view: 'documents' },
     { icon: 'bi-bell', label: 'Notifications', view: 'notifications' },
-    { icon: 'bi-gear', label: 'Settings', view: 'settings' }
+    { icon: 'bi-gear', label: 'Settings', view: 'settings' },
+    { icon: 'bi-box-arrow-right', label: 'Logout', view: 'logout', action: handleLogout }
+   
   ];
+
+  function setView(view) {
+    dashboardState.update(s => ({ ...s, currentView: view }));
+  }
 </script>
 
-<div class="modal-overlay" class:active={isOpen}>
-  
+
+  <div class="modal-overlay" class:active={state.isOpen}>
     
  
   <div class="dashboard-modal">
@@ -116,16 +146,16 @@ function formatAddress(address) {
           <span class="user-id">ID: {user.id}</span>
         </div>
 
-        <nav class="menu">
-          {#each menuItems as item}
-            <button 
-              class="menu-item {currentView === item.view ? 'active' : ''}"
-              on:click={() => currentView = item.view}>
-              <i class="bi {item.icon}"></i>
-              <span>{item.label}</span>
-            </button>
-          {/each}
-        </nav>
+
+
+              {#each menuItems as menuItem}
+        <button 
+          class="menu-item {currentView === menuItem.view ? 'active' : ''}"
+          on:click={() => menuItem.view === 'logout' ? handleLogout() : currentView = menuItem.view}>
+          <i class="bi {menuItem.icon}"></i>
+          <span>{menuItem.label}</span>
+        </button>
+      {/each}
       </div>
 
      <div class="modal-main">
@@ -210,90 +240,162 @@ function formatAddress(address) {
 </div>
 {/if}
 
+{#if currentView === 'assessments'}
+  <div class="assessments-section">
+    <div class="section-header">
+      <h3>Medical Assessments</h3>
+      <button class="btn-primary">Schedule New Assessment</button>
+    </div>
+    
+    <div class="assessment-list">
+      <div class="assessment-card">
+        <div class="assessment-header">
+          <span class="date">January 15, 2024</span>
+          <span class="status approved">Approved</span>
+        </div>
+        <h4>General Medical Assessment</h4>
+        <p>Conducted by Dr. Sarah Johnson</p>
+        <div class="assessment-details">
+          <p><strong>Diagnosis:</strong> Partial Visual Impairment</p>
+          <p><strong>Recommendations:</strong> Regular check-ups every 3 months</p>
+        </div>
+        <button class="btn-view">View Full Report</button>
+      </div>
 
-          {#if currentView === 'assessments'}
-            <div class="assessments-section">
-              <h3>Medical Assessments</h3>
-              <div class="assessment-list">
-                <div class="assessment-card">
-                  <div class="assessment-header">
-                    <span class="date">January 15, 2024</span>
-                    <span class="status approved">Approved</span>
-                  </div>
-                  <h4>General Medical Assessment</h4>
-                  <p>Conducted by Dr. Sarah Johnson</p>
-                </div>
-                <!-- Add more assessment cards -->
-              </div>
-            </div>
-          {/if}
+      <div class="assessment-card">
+        <div class="assessment-header">
+          <span class="date">December 1, 2023</span>
+          <span class="status completed">Completed</span>
+        </div>
+        <h4>Physical Therapy Evaluation</h4>
+        <p>Conducted by Dr. James Wilson</p>
+        <div class="assessment-details">
+          <p><strong>Focus Area:</strong> Mobility Assessment</p>
+          <p><strong>Next Review:</strong> March 1, 2024</p>
+        </div>
+        <button class="btn-view">View Full Report</button>
+      </div>
+    </div>
+  </div>
+{/if}
 
-          {#if currentView === 'appointments'}
-            <div class="appointments-section">
-              <h3>Upcoming Appointments</h3>
-              <div class="appointment-calendar">
-                <!-- Add calendar or appointment list -->
-                <div class="appointment-item">
-                  <div class="appointment-time">
-                    <i class="bi bi-clock"></i>
-                    Feb 1, 2024 - 10:00 AM
-                  </div>
-                  <div class="appointment-details">
-                    <h4>Medical Review</h4>
-                    <p>With Dr. Michael Smith</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          {/if}
+{#if currentView === 'appointments'}
+  <div class="appointments-section">
+    <div class="section-header">
+      <h3>Appointments</h3>
+      <button class="btn-primary">Book New Appointment</button>
+    </div>
 
-          {#if currentView === 'documents'}
-            <div class="documents-section">
-              <h3>My Documents</h3>
-              <div class="document-grid">
-                <div class="document-card">
-                  <i class="bi bi-file-pdf"></i>
-                  <span>Medical Certificate</span>
-                  <button class="download-btn">Download</button>
-                </div>
-                <!-- Add more document cards -->
-              </div>
-            </div>
-          {/if}
+    <div class="appointments-grid">
+      <div class="upcoming-appointments">
+        <h4>Upcoming Appointments</h4>
+        <div class="appointment-card">
+          <div class="appointment-date">
+            <span class="day">15</span>
+            <span class="month">FEB</span>
+          </div>
+          <div class="appointment-details">
+            <h5>Medical Check-up</h5>
+            <p>Dr. Michael Smith</p>
+            <p><i class="bi bi-clock"></i> 10:00 AM</p>
+            <p><i class="bi bi-geo-alt"></i> Main Clinic, Room 204</p>
+          </div>
+          <div class="appointment-actions">
+            <button class="btn-reschedule">Reschedule</button>
+            <button class="btn-cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
 
-          {#if currentView === 'notifications'}
-            <div class="notifications-section">
-              <h3>Recent Notifications</h3>
-              <div class="notification-list">
-                <div class="notification-item unread">
-                  <i class="bi bi-bell-fill"></i>
-                  <div class="notification-content">
-                    <h4>Appointment Reminder</h4>
-                    <p>Your appointment is scheduled for tomorrow</p>
-                    <span class="time">2 hours ago</span>
-                  </div>
-                </div>
-                <!-- Add more notifications -->
-              </div>
-            </div>
-          {/if}
+      <div class="appointment-history">
+        <h4>Past Appointments</h4>
+        <!-- Add past appointments list -->
+      </div>
+    </div>
+  </div>
+{/if}
 
-          {#if currentView === 'settings'}
-            <div class="settings-section">
-              <h3>Account Settings</h3>
-              <div class="settings-grid">
-                <div class="settings-card">
-                  <h4>Personal Information</h4>
-                  <button class="edit-btn">Edit</button>
-                </div>
-                <div class="settings-card">
-                  <h4>Notification Preferences</h4>
-                  <button class="edit-btn">Manage</button>
-                </div>
-                <!-- Add more settings options -->
-              </div>
-            </div>
-          {/if}
+{#if currentView === 'documents'}
+  <div class="documents-section">
+    <div class="section-header">
+      <h3>My Documents</h3>
+      <button class="btn-primary">Upload New Document</button>
+    </div>
+
+    <div class="document-grid">
+      <div class="document-card">
+        <div class="document-icon">
+          <i class="bi bi-file-pdf"></i>
+        </div>
+        <div class="document-info">
+          <h4>Medical Certificate</h4>
+          <p>Uploaded on Jan 15, 2024</p>
+          <span class="document-size">2.4 MB</span>
+        </div>
+        <div class="document-actions">
+          <button class="btn-view">View</button>
+          <button class="btn-download">Download</button>
+        </div>
+      </div>
+
+      <!-- Add more document cards -->
+    </div>
+  </div>
+{/if}
+
+{#if currentView === 'notifications'}
+  <div class="notifications-section">
+    <div class="section-header">
+      <h3>Notifications</h3>
+      <button class="btn-clear">Clear All</button>
+    </div>
+
+    <div class="notification-filters">
+      <button class="filter-btn active">All</button>
+      <button class="filter-btn">Appointments</button>
+      <button class="filter-btn">Documents</button>
+      <button class="filter-btn">Updates</button>
+    </div>
+
+    <div class="notification-list">
+      <!-- Add notification items -->
+    </div>
+  </div>
+{/if}
+
+{#if currentView === 'settings'}
+  <div class="settings-section">
+    <div class="settings-grid">
+      <div class="settings-card">
+        <h4>Account Settings</h4>
+        <div class="settings-options">
+          <div class="setting-item">
+            <span>Email Notifications</span>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <span>SMS Notifications</span>
+            <label class="switch">
+              <input type="checkbox">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <!-- Add more settings options -->
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <h4>Privacy Settings</h4>
+        <!-- Add privacy settings -->
+      </div>
+    </div>
+  </div>
+{/if}
+
+          
         </div>
       </div>
     </div>
@@ -361,7 +463,110 @@ function formatAddress(address) {
   border-right: 1px solid #e9ecef;
   height: 100%;
   overflow-y: auto;
+  
 }
+
+
+
+/* Add these new styles to your existing CSS */
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  margin: 4px 0;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  color: #000;
+  border: none;
+  background: transparent;
+  width: 100%;
+}
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.menu-item.active {
+  background: #27667B;
+  color: white;
+  font-weight: 500;
+}
+
+.user-profile {
+  padding: 2rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 2rem;
+}
+
+.avatar img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid #27667B;
+  padding: 4px;
+}
+
+
+
+.info-section:hover {
+  transform: translateY(-2px);
+}
+
+.info-section h4 {
+  color: #27667B;
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.75rem;
+}
+
+.info-item {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border: none;
+}
+
+.label {
+  font-weight: 600;
+  color: #27667B;
+}
+
+.value {
+  color: #1f2937;
+}
+
+/* Enhanced buttons */
+.btn-edit, .download-btn {
+  background: #27667B;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-edit:hover, .download-btn:hover {
+  background: #1e4f5f;
+  transform: translateY(-1px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.content-body {
+  animation: fadeIn 0.3s ease-out;
+}
+
 
 .menu {
   display: flex;
@@ -369,11 +574,7 @@ function formatAddress(address) {
   gap: 0.5rem;
 }
 
-.menu-item {
-  cursor: pointer;
-  width: 100%;
-  text-align: left;
-}
+
 
   .modal-main {
      padding: 1.5rem;
@@ -616,6 +817,219 @@ function formatAddress(address) {
 
 .value {
   color: #111827;
+}
+/* Section Headers */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+/* Assessment Section */
+.assessment-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.assessment-card:hover {
+  transform: translateY(-2px);
+}
+
+.assessment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.status {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status.approved { background: #10B981; color: white; }
+.status.completed { background: #6366F1; color: white; }
+.status.pending { background: #F59E0B; color: white; }
+
+/* Appointments Section */
+.appointments-grid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 2rem;
+}
+
+.appointment-card {
+  display: flex;
+  gap: 1.5rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.appointment-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #27667B;
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  min-width: 80px;
+}
+
+.appointment-date .day {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Documents Section */
+.document-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.document-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.document-icon i {
+  font-size: 2rem;
+  color: #27667B;
+}
+
+/* Notifications Section */
+.notification-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.filter-btn {
+  padding: 0.5rem 1.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.filter-btn.active {
+  background: #27667B;
+  color: white;
+  border-color: #27667B;
+}
+
+/* Settings Section */
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Switch Toggle */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #27667B;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+/* Buttons */
+.btn-primary {
+  background: #27667B;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #1e4f5f;
+  transform: translateY(-1px);
+}
+
+.btn-view, .btn-download {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-view {
+  background: #27667B;
+  color: white;
+}
+
+.btn-download {
+  background: #f3f4f6;
+  color: #374151;
 }
 
 

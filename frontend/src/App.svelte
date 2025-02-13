@@ -1,4 +1,5 @@
 <script>
+ import AccessibilityWidget from '/home/keziah/pwd_reg_system/frontend/src/Accessibity.svelte'
   import 'bootstrap/dist/css/bootstrap.min.css';
   import { onMount } from 'svelte';
   import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -7,13 +8,18 @@
   import HealthOfficerReg from "../src/HealthOfficerRegistration.svelte";
   import Login from "../src/login.svelte";
   import { Router, Link, Route } from 'svelte-routing';
-  import PWDDashboard from "/home/keziah/pwd_reg_system/frontend/src/PWDDashboard.svelte"
-  import CountyOfficerDashboard from "/home/keziah/pwd_reg_system/frontend/src/CountyDashboard.svelte";
+  
+  import PWDDashboard from "../src/PWDDashboard.svelte"
+  import CountyDashboard from "../src/CountyDashboard.svelte";
+  import HealthDashboard from "../src/HealthOfficerDashboard.svelte";
   import { routes } from '../src/route.js';
    let showLogin = false;
   
   let dashboardOpen = true; // Control the dashboard visibility
   let dashboardoneOpen = true;
+  let dashboardtwoOpen = true;
+  // Create base URL for router
+
 
 
   let showRoleSelection = false;
@@ -145,7 +151,7 @@ function handleDisabilitySelect(disability) {
     }
   };
 </script>
-
+<AccessibilityWidget />
 
 
 <style>
@@ -353,18 +359,6 @@ function handleDisabilitySelect(disability) {
     height: 40px;
     background: rgba(0, 0, 0, 0.1);
   }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -687,25 +681,16 @@ function handleDisabilitySelect(disability) {
 </style>
 
 <Router>
-  <Route path="/pwd-dashboard">
-    <PWDDashboard isOpen={dashboardOpen} />
-  </Route>
+  <div>
+    <Route path="/pwd-dashboard" component={PWDDashboard} />
+    <Route path="/county-dashboard" component={CountyDashboard} />
+    <Route path="/health-dashboard" component={HealthDashboard} />
+  </div>
 </Router>
-<Router>
-  <Route path="/county-dashboard">
-    <CountyOfficerDashboard isOpen={dashboardoneOpen} />
-  </Route>
-</Router>
-
 
 {#if showLogin}
   <Login on:close={() => showLogin = false} />
-{:else if showReg}
-  <Reg role="pwd" disability={selectedDisability} />
-{:else if showCountyOfficerReg}
-  <CountyOfficerReg role="county Officer" />
-{:else if showHealthOfficerReg}
-  <HealthOfficerReg role="Health Officer" />
+
   {/if}
 
 {#if showReg}
@@ -811,7 +796,7 @@ function handleDisabilitySelect(disability) {
 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm py-2">
   <div class="container">
     <a class="navbar-brand fs-4 fw-bold" style="color: #27667B" href="/">
-      <i class="bi bi-heart-pulse me-2"></i>PWD Access
+      <i class="bi bi-heart-pulse me-2"></i>PWD Connect
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>

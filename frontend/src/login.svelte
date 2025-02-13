@@ -3,25 +3,12 @@
 import { navigate } from 'svelte-routing';
 import {user} from "../src/authstore.js";
 
- async function handleLogin() {
-    const dashboardRoutes = {
-      pwd: '/pwd-dashboard',
-      county: '/county-dashboard',
-      health: '/health-dashboard'
-    };
+ 
 
-    // Set user data in store
-    user.set({
-      type: userType,
-      ...formData
-    });
-
-    // Navigate to appropriate dashboard
-    navigate(dashboardRoutes[userType]);
-    dispatch('close');
-  }
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
+   let loading = false;
+  let error = null;
 
   let userType = 'pwd';
   let formData = {
@@ -37,7 +24,30 @@ import {user} from "../src/authstore.js";
     { id: 'health', label: 'Health Officer', icon: 'bi-hospital' }
   ];
 
+  async function handleLogin() {
+  loading = true;
   
+  const dashboardRoutes = {
+    pwd: '/pwd-dashboard',
+    county: '/county-dashboard',
+    health: '/health-dashboard'
+  };
+
+  try {
+    user.set({
+      type: userType,
+      ...formData
+    });
+
+    window.location.href = dashboardRoutes[userType];
+    dispatch('close');
+  } catch (err) {
+    error = "Login failed. Please try again.";
+  } finally {
+    loading = false;
+  }
+}
+
 
   function togglePassword() {
     showPassword = !showPassword;
@@ -234,6 +244,62 @@ import {user} from "../src/authstore.js";
     from { transform: translateY(-20px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
   }
+
+  .spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.login-button {
+    width: 100%;
+    padding: 0.875rem;
+    background: #27667B;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .login-button:not(:disabled):hover {
+    background: #1e5163;
+    transform: translateY(-1px);
+  }
+
+  .login-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .loading-state, .default-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .error-message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: #fee2e2;
+    color: #dc2626;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes slideIn {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
 </style>
 <div class="modal-overlay" on:click|self={handleClose}>
   <div class="login-modal">
@@ -326,12 +392,32 @@ import {user} from "../src/authstore.js";
           <a href="/forgot-password" class="forgot-link">Forgot Password?</a>
         </div>
 
-        <div class="form-group full-width">
-          <button type="submit" class="login-button">
-            <span>Login</span>
-            <i class="bi bi-arrow-right"></i>
-          </button>
-        </div>
+                <div class="form-group full-width">
+            <button 
+              type="submit" 
+              class="login-button" 
+              disabled={loading}
+            >
+              {#if loading}
+                <div class="loading-state">
+                  <i class="bi bi-arrow-repeat spin"></i>
+                  <span>Logging in...</span>
+                </div>
+              {:else}
+                <div class="default-state">
+                  <span>Login</span>
+                  <i class="bi bi-arrow-right"></i>
+                </div>
+              {/if}
+            </button>
+          </div>
+
+          {#if error}
+            <div class="error-message" role="alert">
+              <i class="bi bi-exclamation-circle"></i>
+              <span>{error}</span>
+            </div>
+          {/if}
 
         <div class="form-group full-width">
           <div class="register-link">

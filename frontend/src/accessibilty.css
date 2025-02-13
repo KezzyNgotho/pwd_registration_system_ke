@@ -1,0 +1,60 @@
+/* Base Accessibility Styles */
+:root {
+    --font-size: 100%;
+    --text-spacing: 1em;
+    --line-height: 1.5;
+    --saturation: 100%;
+  }
+  
+  /* High Contrast Mode */
+  .high-contrast {
+    background: black;
+    color: white;
+    --link-color: yellow;
+    --border-color: white;
+  }
+  
+  /* Dyslexia Friendly */
+  .dyslexia-friendly {
+    font-family: 'OpenDyslexic', sans-serif;
+    word-spacing: 0.25em;
+    letter-spacing: 0.05em;
+  }
+  
+  /* Animation Control */
+  .no-animations * {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  /* Image Visibility */
+  .hide-images img {
+    opacity: 0.1;
+  }
+  
+  /* Focus Highlighting */
+  .highlight-focus :focus {
+    outline: 3px solid #27667B;
+    outline-offset: 2px;
+  }
+  
+  /* Tooltip Enhancement */
+  .show-tooltips [title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    background: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 1000;
+  }
+  
+  /* Global Text Adjustments */
+  body {
+    font-size: var(--font-size);
+    letter-spacing: var(--text-spacing);
+    line-height: var(--line-height);
+    filter: saturate(var(--saturation));
+  }
+  
