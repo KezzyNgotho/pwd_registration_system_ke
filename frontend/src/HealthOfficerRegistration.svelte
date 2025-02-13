@@ -4,7 +4,7 @@
 
   // Props
   export let disability;
-  export let role;
+  export const role = 'health_officer'; // Mark as const for external reference
   let assistiveTools;
 
   onMount(() => {
@@ -72,7 +72,7 @@
       <h2>Health Officer Registration</h2>
       <p>Complete your professional registration details</p>
     </div>
-    <button class="close-button" on:click={() => window.location.href = '/'}>
+    <button class="close-button" aria-label="Close registration modal" on:click={() => window.location.href = '/'}>
       <i class="bi bi-x-lg"></i>
     </button>
   </div>
@@ -83,7 +83,7 @@
       <div class="form-group">
         <div class="form-floating">
           <input {...createInputProps('licenseId', 'text', formData.licenseId)} 
-                 placeholder="License ID" required pattern="[A-Z0-9]{8}"/>
+                 id="licenseId" placeholder="License ID" required pattern="[A-Z0-9]{8}"/>
           <label for="licenseId">
             <i class="bi bi-shield-check"></i> Medical License ID
           </label>
@@ -111,7 +111,7 @@
       <div class="form-group">
         <div class="form-floating">
           <input {...createInputProps('fullName', 'text', formData.fullName)} 
-                 placeholder="Full Name" required/>
+                 id="fullName" placeholder="Full Name" required/>
           <label for="fullName">
             <i class="bi bi-person-badge"></i> Full Name
           </label>
@@ -121,7 +121,7 @@
       <div class="form-group">
         <div class="form-floating">
           <input {...createInputProps('email', 'email', formData.email)} 
-                 placeholder="Email" required/>
+                 id="email" placeholder="Email" required/>
           <label for="email">
             <i class="bi bi-envelope"></i> Professional Email
           </label>
@@ -136,7 +136,7 @@
           <div class="input-group">
             <span class="input-group-text">+254</span>
             <input {...createInputProps('mobile', 'tel', formData.mobile)} 
-                   placeholder="Mobile Number" required pattern="[0-9]{9}" maxlength="9"/>
+                   id="mobile" placeholder="Mobile Number" required pattern="[0-9]{9}" maxlength="9"/>
           </div>
         </div>
       </div>
@@ -162,7 +162,7 @@
       <div class="form-group">
         <div class="form-floating">
           <input {...createInputProps('password', 'password', formData.password)} 
-                 placeholder="Password" required minlength="8"/>
+                 id="password" placeholder="Password" required minlength="8"/>
           <label for="password">
             <i class="bi bi-lock"></i> Password
           </label>
@@ -172,7 +172,7 @@
       <div class="form-group">
         <div class="form-floating">
           <input {...createInputProps('confirmPassword', 'password', formData.confirmPassword)} 
-                 placeholder="Confirm Password" required/>
+                 id="confirmPassword" placeholder="Confirm Password" required/>
           <label for="confirmPassword">
             <i class="bi bi-lock-check"></i> Confirm Password
           </label>
@@ -191,43 +191,43 @@
 </div>
 
 <style>
+  .header-section {
+    width: 100%;
+    max-width: 2000px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.8rem;
+    padding: 0 1rem;
+  }
 
-.header-section {
-  width: 100%;
-  max-width: 2000px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1.8rem;
-  padding: 0 1rem;
-}
+  .close-button {
+    background: none;
+    border: none;
+    color: #27667B;
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    margin-top: 0.5rem;
+  }
 
-.close-button {
-  background: none;
-  border: none;
-  color: #27667B;
-  font-size: 1.8rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  margin-top: 0.5rem;
-}
+  .close-button:hover {
+    background: rgba(39, 102, 123, 0.1);
+    transform: scale(1.1);
+  }
 
-.close-button:hover {
-  background: rgba(39, 102, 123, 0.1);
-  transform: scale(1.1);
-}
+  .form-header {
+    text-align: center;
+    flex-grow: 1;
+  }
 
-.form-header {
-  text-align: center;
-  flex-grow: 1;
-}
   .page-wrapper {
     min-height: 85vh;
     width: 100%;
@@ -237,8 +237,6 @@
     align-items: center;
     padding: 1.5rem 0.5rem;
   }
-
- 
 
   .form-header h2 {
     font-size: 2.4rem;
@@ -264,12 +262,7 @@
     margin-bottom: 1.8rem;
     width: 100%;
   }
- .form-row1 {
-    display: flex;
-    gap: 4.5rem;
-    margin-bottom: 1.8rem;
-    width: 100%;
-  }
+
   .form-group {
     flex: 1;
     min-width: 450px;
@@ -332,72 +325,6 @@
   @media (max-width: 1200px) {
     .form-group {
       min-width: 350px;
-    }
-  }
-  .mobile-row {
-    margin-bottom: 2.5rem;
-    width: 100%;
-  }
-
-  .mobile-group {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
-
-  .mobile-container {
-    width: 100%;
-  }
-
-  .mobile-container .input-group {
-    width: 100%;
-    display: flex;
-    align-items: center;
-  }
-
-  .mobile-container .input-group-text {
-    min-width: 80px;
-    background: #f8fafc;
-    border: 1px solid #e0e0e0;
-    border-right: none;
-    border-radius: 8px 0 0 8px;
-    height: 3.4rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 500;
-    color: #64748b;
-  }
-
-  .mobile-container .form-control {
-    flex: 1;
-    border-left: none;
-    border-radius: 0 8px 8px 0;
-  }
-
-   /* Responsive Design Updates */
-  @media (max-width: 1600px) {
-    .registration-form {
-      max-width: 1400px;
-      padding: 2rem;
-    }
-    .form-group {
-      min-width: 350px;
-    }
-    .form-header h2 {
-      font-size: 2.2rem;
-    }
-  }
-
-  @media (max-width: 1200px) {
-    .registration-form {
-      max-width: 1000px;
-      padding: 1.8rem;
-    }
-    .form-group {
-      min-width: 300px;
-    }
-    .form-row {
-      gap: 1.5rem;
     }
   }
 

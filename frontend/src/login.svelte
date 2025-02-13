@@ -1,13 +1,10 @@
-
 <script>
-import { navigate } from 'svelte-routing';
-import {user} from "../src/authstore.js";
-
- 
-
+  import { navigate } from 'svelte-routing';
+  import { user } from "../src/authstore.js";
   import { createEventDispatcher } from 'svelte';
+
   const dispatch = createEventDispatcher();
-   let loading = false;
+  let loading = false;
   let error = null;
 
   let userType = 'pwd';
@@ -25,29 +22,31 @@ import {user} from "../src/authstore.js";
   ];
 
   async function handleLogin() {
-  loading = true;
-  
-  const dashboardRoutes = {
-    pwd: '/pwd-dashboard',
-    county: '/county-dashboard',
-    health: '/health-dashboard'
-  };
+    loading = true;
+    error = null;
 
-  try {
-    user.set({
-      type: userType,
-      ...formData
-    });
+    const dashboardRoutes = {
+      pwd: '/pwd-dashboard',
+      county: '/county-dashboard',
+      health: '/health-dashboard'
+    };
 
-    window.location.href = dashboardRoutes[userType];
-    dispatch('close');
-  } catch (err) {
-    error = "Login failed. Please try again.";
-  } finally {
-    loading = false;
+    try {
+      // Simulate login logic
+      user.set({
+        type: userType,
+        ...formData
+      });
+
+      // Redirect to the appropriate dashboard
+      window.location.href = dashboardRoutes[userType];
+      dispatch('close');
+    } catch (err) {
+      error = "Login failed. Please try again.";
+    } finally {
+      loading = false;
+    }
   }
-}
-
 
   function togglePassword() {
     showPassword = !showPassword;
@@ -55,6 +54,15 @@ import {user} from "../src/authstore.js";
 
   function handleClose() {
     dispatch('close');
+  }
+ 
+
+
+  // Add keyboard close handler
+  function handleKeyClose(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      handleClose();
+    }
   }
 </script>
 
@@ -87,7 +95,7 @@ import {user} from "../src/authstore.js";
 
   .login-left {
     padding: clamp(1.25rem, 3vw, 2.5rem);
-    background: linear-gradient(145deg, #27667B, #1e5163);
+    background: linear-gradient(145deg, #27667b, #1e5163);
     color: white;
     display: flex;
     flex-direction: column;
@@ -157,7 +165,8 @@ import {user} from "../src/authstore.js";
     width: 100%;
   }
 
-  input, select {
+  input,
+  select {
     width: 100%;
     padding: 0.75rem 1rem 0.75rem 2.5rem;
     border: 1.5px solid #e2e8f0;
@@ -187,7 +196,7 @@ import {user} from "../src/authstore.js";
   .login-button {
     width: 100%;
     padding: 0.75rem;
-    background: #27667B;
+    background: #27667b;
     color: white;
     border: none;
     border-radius: 8px;
@@ -205,7 +214,7 @@ import {user} from "../src/authstore.js";
     right: 1rem;
     background: none;
     border: none;
-    color: #27667B;
+    color: #27667b;
     font-size: 1.5rem;
     cursor: pointer;
     z-index: 10;
@@ -229,35 +238,51 @@ import {user} from "../src/authstore.js";
     .modal-overlay {
       padding: 0.5rem;
     }
-    
-    input, select, .type-button {
+
+    input,
+    select,
+    .type-button {
       padding: 0.75rem;
     }
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
   @keyframes slideIn {
-    from { transform: translateY(-20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
   }
 
   .spin {
-  animation: spin 1s linear infinite;
-}
+    animation: spin 1s linear infinite;
+  }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 
-.login-button {
+  .login-button {
     width: 100%;
     padding: 0.875rem;
-    background: #27667B;
+    background: #27667b;
     color: white;
     border: none;
     border-radius: 8px;
@@ -275,7 +300,8 @@ import {user} from "../src/authstore.js";
     cursor: not-allowed;
   }
 
-  .loading-state, .default-state {
+  .loading-state,
+  .default-state {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -296,14 +322,26 @@ import {user} from "../src/authstore.js";
   }
 
   @keyframes slideIn {
-    from { transform: translateY(-10px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
   }
-
 </style>
-<div class="modal-overlay" on:click|self={handleClose}>
+
+<div 
+  class="modal-overlay" 
+  on:click|self={handleClose}
+  on:keydown={handleKeyClose}
+  role="button"
+  tabindex="0"
+>
   <div class="login-modal">
-    <button class="close-button" on:click={handleClose}>×</button>
+    <button class="close-button" aria-label="Close login modal" on:click={handleClose}>×</button>
     <div class="login-left">
       <div class="login-header">
         <h2>Welcome Back</h2>
@@ -312,9 +350,11 @@ import {user} from "../src/authstore.js";
 
       <div class="user-type-selector">
         {#each userTypes as type}
-          <button 
+          <button
             class="type-button {userType === type.id ? 'active' : ''}"
-            on:click={() => userType = type.id}>
+            on:click={() => userType = type.id}
+            aria-label={`Login as ${type.label}`}
+          >
             <i class="bi {type.icon}"></i>
             <span>{type.label}</span>
           </button>
@@ -341,6 +381,7 @@ import {user} from "../src/authstore.js";
               id="identifier"
               bind:value={formData.identifier}
               required
+              aria-label="Enter your identifier"
             />
           </div>
         </div>
@@ -350,10 +391,12 @@ import {user} from "../src/authstore.js";
             <label for="county">County</label>
             <div class="input-wrapper">
               <i class="bi bi-geo-alt input-icon"></i>
-              <select 
+              <select
                 id="county"
                 bind:value={formData.county}
-                required>
+                required
+                aria-label="Select your county"
+              >
                 <option value="">Select County</option>
                 <option value="nairobi">Nairobi</option>
                 <option value="mombasa">Mombasa</option>
@@ -371,11 +414,14 @@ import {user} from "../src/authstore.js";
               id="password"
               bind:value={formData.password}
               required
+              aria-label="Enter your password"
             />
-            <button 
+            <button
               type="button"
               class="password-toggle"
-              on:click={togglePassword}>
+              on:click={togglePassword}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
               <i class="bi {showPassword ? 'bi-eye-slash' : 'bi-eye'}"></i>
             </button>
           </div>
@@ -383,7 +429,7 @@ import {user} from "../src/authstore.js";
 
         <div class="form-group">
           <label class="remember-me">
-            <input type="checkbox" />
+            <input type="checkbox" aria-label="Remember me" />
             <span>Remember me</span>
           </label>
         </div>
@@ -392,32 +438,33 @@ import {user} from "../src/authstore.js";
           <a href="/forgot-password" class="forgot-link">Forgot Password?</a>
         </div>
 
-                <div class="form-group full-width">
-            <button 
-              type="submit" 
-              class="login-button" 
-              disabled={loading}
-            >
-              {#if loading}
-                <div class="loading-state">
-                  <i class="bi bi-arrow-repeat spin"></i>
-                  <span>Logging in...</span>
-                </div>
-              {:else}
-                <div class="default-state">
-                  <span>Login</span>
-                  <i class="bi bi-arrow-right"></i>
-                </div>
-              {/if}
-            </button>
-          </div>
+        <div class="form-group full-width">
+          <button
+            type="submit"
+            class="login-button"
+            disabled={loading}
+            aria-label="Login"
+          >
+            {#if loading}
+              <div class="loading-state">
+                <i class="bi bi-arrow-repeat spin"></i>
+                <span>Logging in...</span>
+              </div>
+            {:else}
+              <div class="default-state">
+                <span>Login</span>
+                <i class="bi bi-arrow-right"></i>
+              </div>
+            {/if}
+          </button>
+        </div>
 
-          {#if error}
-            <div class="error-message" role="alert">
-              <i class="bi bi-exclamation-circle"></i>
-              <span>{error}</span>
-            </div>
-          {/if}
+        {#if error}
+          <div class="error-message" role="alert">
+            <i class="bi bi-exclamation-circle"></i>
+            <span>{error}</span>
+          </div>
+        {/if}
 
         <div class="form-group full-width">
           <div class="register-link">

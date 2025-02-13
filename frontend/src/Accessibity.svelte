@@ -3,6 +3,7 @@
   import { FaUniversalAccess, FaEye, FaHandPaper, FaTextHeight, FaAdjust, FaMoon, FaKeyboard } from 'svelte-icons/fa';
 
   let showModal = false;
+  let selectedOption = null;
   
   const accessibilityOptions = [
     { icon: FaEye, title: 'High Contrast', key: 'contrast' },
@@ -12,6 +13,11 @@
     { icon: FaMoon, title: 'Dark Mode', key: 'darkMode' },
     { icon: FaKeyboard, title: 'Keyboard Nav', key: 'keyboard' }
   ];
+
+  function handleOptionSelect(key) {
+    selectedOption = selectedOption === key ? null : key;
+    // Add your accessibility implementation logic here
+  }
 </script>
 
 <style>
@@ -64,6 +70,7 @@
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
+    border: 1px solid transparent;
   }
 
   .option:hover {
@@ -73,6 +80,7 @@
   .option.active {
     background: #e0e7ff;
     color: #4f46e5;
+    border-color: #4f46e5;
   }
 
   .icon-wrapper {
@@ -88,20 +96,37 @@
   }
 </style>
 
-<button class="accessibility-trigger" on:click={() => showModal = !showModal}>
+<button 
+  class="accessibility-trigger" 
+  on:click={() => showModal = !showModal}
+  aria-label="Open accessibility options"
+>
   <div class="icon-wrapper">
     <FaUniversalAccess />
   </div>
 </button>
 
 {#if showModal}
-  <div class="modal" transition:fade={{ duration: 200 }}>
-    <h3>Accessibility Options</h3>
+  <div 
+    class="modal" 
+    transition:fade={{ duration: 200 }}
+    role="dialog"
+    aria-labelledby="accessibility-modal-title"
+  >
+    <h3 id="accessibility-modal-title">Accessibility Options</h3>
     <div class="options-grid">
       {#each accessibilityOptions as option}
-        <div class="option">
+        <div 
+          class="option"
+          class:active={selectedOption === option.key}
+          on:click={() => handleOptionSelect(option.key)}
+          role="button"
+          tabindex="0"
+          on:keydown={(e) => e.key === 'Enter' && handleOptionSelect(option.key)}
+          aria-pressed={selectedOption === option.key}
+        >
           <div class="icon-wrapper">
-            <svelte:component this={option.icon}/>
+            <svelte:component this={option.icon} />
           </div>
           <span class="title">{option.title}</span>
         </div>

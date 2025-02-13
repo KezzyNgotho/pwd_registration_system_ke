@@ -3,13 +3,28 @@
 import { AssistiveTools } from '../src/Assistive.js';
 
   // Props
+  export const role = '';
   export let disability;
-  export let role;
   let assistiveTools;
 
 onMount(() => {
   assistiveTools = new AssistiveTools(disability);
 });
+
+  // Add missing voice recognition initialization
+  let recognition;
+  onMount(() => {
+    if ('webkitSpeechRecognition' in window) {
+      recognition = new webkitSpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.onresult = handleVoiceResult;
+      recognition.onerror = (event) => {
+        console.error('Voice recognition error:', event.error);
+      };
+    }
+  });
+
 
   // Form Data Arrays
   const maritalStatus = [
@@ -115,9 +130,7 @@ onMount(() => {
     }
   }
 
-  // Voice Recognition Setup
-  let recognition;
-  
+
 
   function toggleVoiceInput() {
     if (!isListening) {
@@ -360,22 +373,33 @@ let formErrors = {
   <!-- Progress Bar -->
   <div class="progress-wrapper mb-4">
     <div class="progress" role="progressbar" aria-valuenow={formProgress} aria-valuemin="0" aria-valuemax="100">
-      <div class="progress-bar" style="width: {formProgress}%"></div>
-    </div>
-    <div class="progress-steps">
+            <div class="progress-steps" role="tablist">
       {#each sections as section}
-        <div 
-          class="step {currentSection === section.id ? 'active' : ''}"
-          on:click={() => currentSection = section.id}
+        <div
           role="tab"
-          aria-selected={currentSection === section.id}>
-          <i class="bi {section.icon}" aria-hidden="true"></i>
+          tabindex="0"
+          class="progress-step {currentSection === section.id ? 'active' : ''}"
+          aria-selected={currentSection === section.id}
+          id={`tab-${section.id}`}
+          aria-controls={`panel-${section.id}`}
+          on:keydown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              currentSection = section.id;
+              updateProgress();
+            }
+          }}
+          on:click={() => {
+            currentSection = section.id;
+            updateProgress();
+          }}
+        >
+          <i class={`bi ${section.icon}`} aria-hidden="true"></i>
           <span>{section.title}</span>
         </div>
       {/each}
     </div>
   </div>
-
+</div>
   <!-- Form Sections -->
  <form class="registration-form" on:submit|preventDefault={handleSubmit}>
   {#if currentSection === 'personal'}
@@ -472,121 +496,29 @@ let formErrors = {
     </div>
   {/if}
 
+    <!-- Education Section -->
     {#if currentSection === 'education'}
-  <div class="form-section animate-in" role="tabpanel">
-    <h3><i class="bi bi-book" aria-hidden="true"></i> Education & Skills</h3>
-    <div class="row g-4">
-      <div class="col-12">
-        <div class="form-check">
-          <input 
-            type="checkbox"
-            id="noEducation"
-            class="form-check-input"
-            bind:checked={userResponses.educationInfo.noFormalEducation}
-            on:focus={handleFieldFocus}
-            on:blur={(e) => assistiveTools?.handleFieldValidation(e.target)}
-          />
-          <label class="form-check-label" for="noEducation">
-            No Formal Education
-          </label>
-        </div>
-      </div>
-
-      {#if !userResponses.educationInfo.noFormalEducation}
-        <div class="col-md-6">
-          <label for="highestLevel" class="form-label">Highest Education Level</label>
-          <select {...createSelectProps('highestLevel', userResponses.educationInfo.highestLevel)}>
-            <option value="">Select Level</option>
-            {#each educationLevels as level}
-              <option value={level}>{level}</option>
-            {/each}
-          </select>
-        </div>
-
-        <div class="col-md-6">
-          <label for="institution" class="form-label">Institution Name</label>
-          <input 
-            {...createInputProps('institution', 'text', userResponses.educationInfo.institution)}
-            placeholder="Enter institution name"
-          />
-        </div>
-
-        <div class="col-md-6">
-          <label for="yearCompleted" class="form-label">Year Completed</label>
-          <input 
-            {...createInputProps('yearCompleted', 'number', userResponses.educationInfo.yearCompleted)}
-            min="1950"
-            max={new Date().getFullYear()}
-            placeholder="YYYY"
-          />
-        </div>
-
-        <div class="col-md-6">
-          <label for="specialization" class="form-label">Field of Study/Specialization</label>
-          <input 
-            {...createInputProps('specialization', 'text', userResponses.educationInfo.specialization)}
-            placeholder="Enter your field of study"
-          />
-        </div>
-      {/if}
-
-      <div class="col-12">
-        <label for="skills" class="form-label">Skills & Training</label>
-        <textarea 
-          class="form-control"
-          id="skills"
-          rows="3"
-          bind:value={userResponses.educationInfo.skills}
-          placeholder="List your skills, training, or practical experience"
-          on:focus={handleFieldFocus}
-          on:blur={(e) => assistiveTools?.handleFieldValidation(e.target)}
-        ></textarea>
-      </div>
-
-      <div class="col-12">
-        <label class="form-label">Certificates & Qualifications</label>
-        <div class="certificate-uploads">
-          {#each userResponses.educationInfo.certificates as cert, index}
-            <div class="certificate-item">
-              <span>{cert.name}</span>
-              <button 
-                type="button" 
-                class="btn btn-sm btn-danger"
-                on:click={() => removeCertificate(index)}
-                aria-label="Remove certificate">
-                <i class="bi bi-trash"></i>
-              </button>
-            </div>
-          {/each}
-          
-          <div class="upload-new">
+      <div class="form-section" role="region" aria-labelledby="education-heading">
+        <h3 id="education-heading"><i class="bi bi-book"></i> Education & Skills</h3>
+        <!-- Fix certificate upload label -->
+        <div class="col-12">
+          <label for="certificateUpload" class="form-label">Certificates & Qualifications</label>
+          <div class="certificate-uploads">
             <input 
               type="file"
               id="certificateUpload"
               accept=".pdf,.jpg,.png"
               on:change={handleCertificateUpload}
-              class="form-control"
-              aria-label="Upload certificate"
+              aria-describedby="certificateHelp"
             />
+            <div id="certificateHelp" class="form-text">
+              Accepted formats: PDF, JPG, PNG (max 5MB)
+            </div>
           </div>
         </div>
       </div>
+    {/if}
 
-      <div class="col-12">
-        <label for="additionalInfo" class="form-label">Additional Information</label>
-        <textarea 
-          class="form-control"
-          id="additionalInfo"
-          rows="2"
-          bind:value={userResponses.educationInfo.additionalInfo}
-          placeholder="Any additional information about your education or training"
-          on:focus={handleFieldFocus}
-          on:blur={(e) => assistiveTools?.handleFieldValidation(e.target)}
-        ></textarea>
-      </div>
-    </div>
-  </div>
-{/if}
 
    {#if currentSection === 'nextOfKin'}
   <div class="form-section animate-in" role="tabpanel">
