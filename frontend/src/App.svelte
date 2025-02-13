@@ -72,7 +72,7 @@ function handleDisabilitySelect(disability) {
   showReg = true; // Replace with the actual component/flag for Person with Disability registration
 }
 
-  import image from "/home/keziah/pwd_reg_system/frontend/src/assets/image.png"
+  import image from "../src/assets/image.png"
 
   
  onMount(() => {
