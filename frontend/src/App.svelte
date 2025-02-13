@@ -1,5 +1,5 @@
 <script>
- import AccessibilityWidget from '/home/keziah/pwd_reg_system/frontend/src/Accessibity.svelte'
+ import AccessibilityWidget from '../src/Accessibity.svelte'
   import 'bootstrap/dist/css/bootstrap.min.css';
   import { onMount } from 'svelte';
   import 'bootstrap-icons/font/bootstrap-icons.css';
