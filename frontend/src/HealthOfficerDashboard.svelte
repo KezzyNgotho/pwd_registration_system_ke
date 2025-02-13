@@ -6,6 +6,11 @@
   let reportStartDate = writable(new Date().toISOString().split('T')[0]);
   let reportEndDate = writable(new Date().toISOString().split('T')[0]);
 
+  function handleNotifications() {
+    console.log("Handling notifications...");
+    // Add your notification logic here
+  }
+
   // Dashboard state initialization
   let state = $healthDashboardState;
   let currentSection = 'overview';

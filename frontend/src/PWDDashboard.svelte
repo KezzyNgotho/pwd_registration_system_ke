@@ -1,6 +1,6 @@
 <script>
 import { user } from '../src/authstore';
- import { pwdDashboardState } from '/home/keziah/pwd_reg_system/frontend/src/dashboardStore.js';
+ import { pwdDashboardState } from '../src/dashboardStore.js';
 
  // Subscribe to dashboard state
   
