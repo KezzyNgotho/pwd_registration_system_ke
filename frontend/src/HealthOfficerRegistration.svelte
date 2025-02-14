@@ -17,10 +17,7 @@
     fullName: '',
     email: '',
     mobile: '',
-    countyOfBirth: '',
-    specialization: '',
-    password: '',
-    confirmPassword: ''
+    
   };
 
   // Counties Data
@@ -28,19 +25,7 @@
     'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Kiambu', 'Machakos', 'Kajiado', 'Uasin Gishu'
   ];
 
-  // Specializations
-  const specializations = [
-    'General Practice',
-    'Pediatrics',
-    'Obstetrics & Gynecology',
-    'Surgery',
-    'Internal Medicine',
-    'Psychiatry',
-    'Dermatology',
-    'Ophthalmology',
-    'Public Health',
-    'Family Medicine'
-  ];
+
 
   // Helper Functions
   function createInputProps(name, type, value) {
@@ -61,9 +46,33 @@
     }
   }
 
-  function handleSubmit() {
-    console.log('Health Officer Data:', formData);
-  }
+ let showSuccessMessage = false;
+let countdown = 5;
+let countdownInterval;
+
+function handleSubmit() {
+  showSuccessMessage = true;
+  startCountdown();
+  console.log('Health Officer Data:', formData);
+}
+
+function startCountdown() {
+  countdownInterval = setInterval(() => {
+    countdown--;
+    if (countdown === 0) {
+      clearInterval(countdownInterval);
+      window.location.href = '/';
+    }
+  }, 1000);
+}
+
+onMount(() => {
+  return () => {
+    if (countdownInterval) clearInterval(countdownInterval);
+  };
+});
+
+
 </script>
 
 <div class="page-wrapper">
@@ -83,28 +92,12 @@
       <div class="form-group">
         <div class="form-floating">
           <input {...createInputProps('licenseId', 'text', formData.licenseId)} 
-                 id="licenseId" placeholder="License ID" required pattern="[A-Z0-9]{8}"/>
+                 id="licenseId" placeholder="License ID"/>
           <label for="licenseId">
             <i class="bi bi-shield-check"></i> Medical License ID
           </label>
         </div>
       </div>
-
-      <div class="form-group">
-        <div class="form-floating">
-          <select id="specialization" class="form-select" 
-                  bind:value={formData.specialization} required>
-            <option value="">Select Specialization</option>
-            {#each specializations as spec}
-              <option value={spec}>{spec}</option>
-            {/each}
-          </select>
-          <label for="specialization">
-            <i class="bi bi-stars"></i> Specialization
-          </label>
-        </div>
-      </div>
-    </div>
 
     <!-- Name and Email -->
     <div class="form-row">
@@ -136,49 +129,10 @@
           <div class="input-group">
             <span class="input-group-text">+254</span>
             <input {...createInputProps('mobile', 'tel', formData.mobile)} 
-                   id="mobile" placeholder="Mobile Number" required pattern="[0-9]{9}" maxlength="9"/>
+                   id="mobile" placeholder="Mobile Number"  maxlength="9"/>
           </div>
         </div>
       </div>
-
-      <div class="form-group">
-        <div class="form-floating">
-          <select id="countyOfBirth" class="form-select" 
-                  bind:value={formData.countyOfBirth} required>
-            <option value="">Select County</option>
-            {#each counties as county}
-              <option value={county}>{county}</option>
-            {/each}
-          </select>
-          <label for="countyOfBirth">
-            <i class="bi bi-geo-alt"></i> County of Birth
-          </label>
-        </div>
-      </div>
-    </div>
-
-    <!-- Passwords -->
-    <div class="form-row">
-      <div class="form-group">
-        <div class="form-floating">
-          <input {...createInputProps('password', 'password', formData.password)} 
-                 id="password" placeholder="Password" required minlength="8"/>
-          <label for="password">
-            <i class="bi bi-lock"></i> Password
-          </label>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="form-floating">
-          <input {...createInputProps('confirmPassword', 'password', formData.confirmPassword)} 
-                 id="confirmPassword" placeholder="Confirm Password" required/>
-          <label for="confirmPassword">
-            <i class="bi bi-lock-check"></i> Confirm Password
-          </label>
-        </div>
-      </div>
-    </div>
 
     <button type="submit" class="submit-button">
       <i class="bi bi-check-circle"></i> Complete Professional Registration
@@ -188,9 +142,73 @@
       Already registered? <a href="/login">Login here</a>
     </div>
   </form>
+  {#if showSuccessMessage}
+  <div class="success-modal">
+    <div class="success-content">
+      <i class="bi bi-check-circle-fill success-icon"></i>
+      <h3>Registration Successful!</h3>
+      <p>Your request has been sent. Please check your SMS or email for next steps.</p>
+      <p class="countdown">Closing in {countdown} seconds...</p>
+    </div>
+  </div>
+{/if}
 </div>
 
 <style>
+/* Add to your style section */
+.success-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.success-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.3s ease-out;
+}
+
+.success-icon {
+  font-size: 3rem;
+  color: #28a745;
+  margin-bottom: 1rem;
+}
+
+.countdown {
+  margin-top: 1rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
   .header-section {
     width: 100%;
     max-width: 2000px;

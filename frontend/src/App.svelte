@@ -1,4 +1,4 @@
-<script>
+ <script>
  import AccessibilityWidget from '../src/Accessibity.svelte'
   import 'bootstrap/dist/css/bootstrap.min.css';
   import { onMount } from 'svelte';
@@ -1181,4 +1181,4 @@ function handleDisabilitySelect(disability) {
   </div>
 </footer>
 
-{/if}
+{/if}  

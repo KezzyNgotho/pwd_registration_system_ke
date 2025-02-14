@@ -14,9 +14,6 @@
   // Form Data
   let formData = {
     nationalId: '',
-    countyOfBirth: '',
-    password: '',
-    confirmPassword: '',
     fullName: '',
     email: '',
     mobile: ''
@@ -53,13 +50,36 @@
     }
   }
 
-  function handleSubmit() {
-    if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
-      return;
-    }
-    console.log('Form Data Submitted:', formData);
+  // Add these to your existing script
+let showSuccessMessage = false;
+let countdown = 5;
+let countdownInterval;
+
+function handleSubmit() {
+  if (formData.password !== formData.confirmPassword) {
+    alert('Passwords do not match!');
+    return;
   }
+  
+  showSuccessMessage = true;
+  startCountdown();
+}
+
+function startCountdown() {
+  countdownInterval = setInterval(() => {
+    countdown--;
+    if (countdown === 0) {
+      clearInterval(countdownInterval);
+      window.location.href = '/';
+    }
+  }, 1000);
+}
+
+onMount(() => {
+  return () => {
+    if (countdownInterval) clearInterval(countdownInterval);
+  };
+});
 </script>
 
 <div class="page-wrapper">
@@ -76,31 +96,20 @@
   <form class="registration-form" on:submit|preventDefault={handleSubmit}>
     <!-- Row 1: ID and County -->
     <div class="form-row">
-      <div class="form-group">
-        <div class="form-floating">
-          <input {...createInputProps('nationalId', 'text', formData.nationalId)} 
-                 id="nationalId" placeholder="National ID" required pattern="[0-9]{8}"/>
-          <label for="nationalId">
-            <i class="bi bi-person-badge"></i> National ID
-          </label>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="form-floating">
-          <select id="countyOfBirth" class="form-select" 
-                  bind:value={formData.countyOfBirth} required>
-            <option value="">Select County</option>
-            {#each counties as county}
-              <option value={county}>{county}</option>
-            {/each}
-          </select>
-          <label for="countyOfBirth">
-            <i class="bi bi-geo-alt"></i> County of Birth
-          </label>
-        </div>
-      </div>
+  <div class="form-group">
+    <div class="form-floating">
+      <input {...createInputProps('nationalId', 'number', formData.nationalId)} 
+             id="nationalId" 
+             placeholder="National ID" 
+             required/>
+      <label for="nationalId">
+        <i class="bi bi-person-badge"></i> National ID
+      </label>
     </div>
+  </div>
+</div>
+
+
 
     <!-- Row 2: Name and Email -->
     <div class="form-row">
@@ -132,35 +141,13 @@
           <div class="input-group">
             <span class="input-group-text">+254</span>
             <input {...createInputProps('mobile', 'tel', formData.mobile)} 
-                   id="mobile" placeholder="Mobile Number" required pattern="[0-9]{9}" maxlength="9"/>
+                   id="mobile" placeholder="Mobile Number"  maxlength="9"/>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Row 4: Passwords -->
-    <div class="form-row">
-      <div class="form-group">
-        <div class="form-floating">
-          <input {...createInputProps('password', 'password', formData.password)} 
-                 id="password" placeholder="Password" required minlength="8"/>
-          <label for="password">
-            <i class="bi bi-lock"></i> Password
-          </label>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="form-floating">
-          <input {...createInputProps('confirmPassword', 'password', formData.confirmPassword)} 
-                 id="confirmPassword" placeholder="Confirm Password" required/>
-          <label for="confirmPassword">
-            <i class="bi bi-lock-check"></i> Confirm Password
-          </label>
-        </div>
-      </div>
-    </div>
-
+   
     <button type="submit" class="submit-button">
       <i class="bi bi-check-circle"></i> Complete Registration
     </button>
@@ -169,9 +156,83 @@
       Already registered? <a href="/login">Login here</a>
     </div>
   </form>
+  <!-- Add this right after your form closing tag -->
+{#if showSuccessMessage}
+  <div class="success-modal">
+    <div class="success-content">
+      <i class="bi bi-check-circle-fill success-icon"></i>
+      <h3>Registration Successful!</h3>
+      <p>Your request has been sent. Please check your SMS or email for next steps.</p>
+      <p class="countdown">Closing in {countdown} seconds...</p>
+    </div>
+  </div>
+{/if}
+
 </div>
 
 <style>
+
+.success-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.success-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.3s ease-out;
+}
+
+.success-icon {
+  font-size: 3rem;
+  color: #28a745;
+  margin-bottom: 1rem;
+}
+
+.countdown {
+  margin-top: 1rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .success-content {
+    padding: 1.5rem;
+    width: 85%;
+  }
+}
+
+
   .header-section {
     width: 100%;
     max-width: 2000px;

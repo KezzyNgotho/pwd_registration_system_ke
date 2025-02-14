@@ -6,6 +6,7 @@
   const dispatch = createEventDispatcher();
   let loading = false;
   let error = null;
+  let successMessage = null;
 
   let userType = 'pwd';
   let formData = {
@@ -24,6 +25,7 @@
   async function handleLogin() {
     loading = true;
     error = null;
+    successMessage = null;
 
     const dashboardRoutes = {
       pwd: '/pwd-dashboard',
@@ -38,9 +40,17 @@
         ...formData
       });
 
-      // Redirect to the appropriate dashboard
-      window.location.href = dashboardRoutes[userType];
-      dispatch('close');
+      // Simulate a delay for the login process
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Set success message
+      successMessage = "Login successful! Redirecting...";
+
+      // Redirect to the appropriate dashboard after a short delay
+      setTimeout(() => {
+        window.location.href = dashboardRoutes[userType];
+        dispatch('close');
+      }, 1500);
     } catch (err) {
       error = "Login failed. Please try again.";
     } finally {
@@ -55,8 +65,6 @@
   function handleClose() {
     dispatch('close');
   }
- 
-
 
   // Add keyboard close handler
   function handleKeyClose(e) {
@@ -321,6 +329,19 @@
     animation: slideIn 0.3s ease-out;
   }
 
+  .success-message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: #dcfce7;
+    color: #16a34a;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    animation: slideIn 0.3s ease-out;
+  }
+
   @keyframes slideIn {
     from {
       transform: translateY(-10px);
@@ -332,7 +353,6 @@
     }
   }
 </style>
-
 <div 
   class="modal-overlay" 
   on:click|self={handleClose}
@@ -463,6 +483,13 @@
           <div class="error-message" role="alert">
             <i class="bi bi-exclamation-circle"></i>
             <span>{error}</span>
+          </div>
+        {/if}
+
+        {#if successMessage}
+          <div class="success-message" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <span>{successMessage}</span>
           </div>
         {/if}
 

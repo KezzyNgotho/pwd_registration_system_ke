@@ -340,7 +340,7 @@ function formatAddress(address) {
 
     display: none;
   place-items: center;
-  padding: 2vh 0;
+  padding: 1vh 0;
 
     position: fixed;
     top: 0;
@@ -361,8 +361,8 @@ function formatAddress(address) {
 
  .dashboard-modal {
     background: white;
-     width: min(1400px, 95vw);
-  height: min(760px, 90vh);
+    width: min(1400px, 98vw);  /* Increased from 95vw for better small screen usage */
+  height: min(760px, 95vh); 
     border-radius: 8px;
     box-shadow: 
       0 20px 40px rgba(0,0,0,0.3),
@@ -384,7 +384,7 @@ function formatAddress(address) {
 
  .modal-content {
   display: grid;
-  grid-template-columns: 220px 1fr;
+   grid-template-columns: min-content 1fr; /* Allow sidebar to shrink */
   height: 100%;
   overflow: hidden;
 }
@@ -395,6 +395,7 @@ function formatAddress(address) {
   border-right: 1px solid #e9ecef;
   height: 100%;
   overflow-y: auto;
+   width: min(220px, 30vw); /* Adapt width for smaller screens */
   
 }
 
@@ -711,9 +712,9 @@ function formatAddress(address) {
 }
 .section-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
-  padding: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Reduced from 400px */
+  gap: 1rem; /* Reduced gap for smaller screens */
+  padding: 1rem;
 }
 
 .info-section {
@@ -735,7 +736,10 @@ function formatAddress(address) {
   padding: 0.75rem;
   border-bottom: 1px solid #e5e7eb;
   
+  flex-direction: column; /* Stack on small screens */
+  gap: 0.5rem;
 }
+
 
 .subsection {
   margin-top: 1rem;
@@ -751,6 +755,60 @@ function formatAddress(address) {
 .value {
   color: #111827;
 }
+@media (max-width: 768px) {
+  .modal-content {
+    grid-template-columns: 1fr; /* Stack sidebar and content */
+  }
+  
+  .modal-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .menu-item {
+    padding: 8px 12px; /* Smaller padding */
+  }
+  
+  .avatar img {
+    width: 80px; /* Smaller avatar */
+    height: 80px;
+  }
+  
+  .section-grid {
+    grid-template-columns: 1fr; /* Single column */
+  }
+}
 
+@media (max-width: 480px) {
+  .dashboard-modal {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+  }
+  
+  .info-section {
+    padding: 1rem;
+  }
+  
+  .menu-item {
+    font-size: 0.9rem;
+  }
+  
+  .info-item {
+    padding: 0.5rem;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .menu-item:hover {
+    background: #000;
+  }
+  
+  .info-section:hover {
+    transform: none;
+  }
+}
 
 </style>

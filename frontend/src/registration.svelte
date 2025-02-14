@@ -248,20 +248,34 @@ onMount(() => {
     }
   }
 
-  async function handleSubmit(event) {
-    event.preventDefault();
-    if (validateForm()) {
-      try {
-        const response = await submitFormData(userResponses);
-        if (response.success) {
-          alert('Registration successful!');
-        }
-      } catch (error) {
-        console.error('Submission error:', error);
-        alert('Registration failed. Please try again.');
-      }
+  // Add to your existing script section
+let showSuccessMessage = false;
+let countdown = 8;
+let countdownInterval;
+let registrationNumber = Math.floor(100000 + Math.random() * 900000); // Generate random reg number
+
+function handleSubmit() {
+  showSuccessMessage = true;
+  startCountdown();
+  console.log('Form Data:', userResponses);
+}
+
+function startCountdown() {
+  countdownInterval = setInterval(() => {
+    countdown--;
+    if (countdown === 0) {
+      clearInterval(countdownInterval);
+      window.location.href = '/login';
     }
-  }
+  }, 1000);
+}
+
+onMount(() => {
+  return () => {
+    if (countdownInterval) clearInterval(countdownInterval);
+  };
+});
+
 
   function validateForm() {
   const requiredSections = ['personalInfo', 'nextOfKin'];
@@ -551,7 +565,7 @@ let formErrors = {
           <input 
             {...createInputProps('kinMobileNumber', 'tel', userResponses.nextOfKin.mobileNumber)}
             placeholder="7XXXXXXXX"
-            pattern="[0-9]{9}"
+           
             aria-required="true"
           />
         </div>
@@ -598,8 +612,75 @@ let formErrors = {
       {/if}
     </div>
   </form>
+
+  <!-- Add right before closing </div> of page-wrapper -->
+{#if showSuccessMessage}
+  <div class="success-modal">
+    <div class="success-content">
+      <i class="bi bi-check-circle-fill success-icon"></i>
+      <h3>Welcome to Our Community!</h3>
+      <p>Your registration was successful.</p>
+      <div class="registration-details">
+        <p>Registration Number: <strong>REG-{registrationNumber}</strong></p>
+        <p>Please check your SMS for this registration number.</p>
+      </div>
+      <p>Login to complete your profile setup and access our services.</p>
+      <p class="countdown">Redirecting to login in {countdown} seconds...</p>
+    </div>
+  </div>
+{/if}
+
 </div>
 <style>
+/* Add to your style section */
+.success-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.success-content {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 15px;
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.3s ease-out;
+}
+
+.success-icon {
+  font-size: 4rem;
+  color: #28a745;
+  margin-bottom: 1.5rem;
+}
+
+.registration-details {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 10px;
+  margin: 1.5rem 0;
+}
+
+.registration-details strong {
+  color: #27667B;
+  font-size: 1.2rem;
+}
+
+.countdown {
+  margin-top: 1.5rem;
+  color: #666;
+  font-size: 0.9rem;
+}
 
 /* Add styles for gesture feedback */
   .gesture-feedback {
