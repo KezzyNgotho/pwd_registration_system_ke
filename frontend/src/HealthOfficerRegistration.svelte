@@ -4,7 +4,7 @@
 
   // Props
   export let disability;
-  export const role = 'health_officer'; // Mark as const for external reference
+  export const role = 'county_user'; // Mark as const for external reference
   let assistiveTools;
 
   onMount(() => {
@@ -17,15 +17,14 @@
     fullName: '',
     email: '',
     mobile: '',
-    
+    county: ''
   };
+
 
   // Counties Data
   const counties = [
     'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Kiambu', 'Machakos', 'Kajiado', 'Uasin Gishu'
   ];
-
-
 
   // Helper Functions
   function createInputProps(name, type, value) {
@@ -46,14 +45,26 @@
     }
   }
 
- let showSuccessMessage = false;
+  function speakText(text) {
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+
+  // Add these to your existing script
+let showSuccessMessage = false;
 let countdown = 5;
 let countdownInterval;
 
 function handleSubmit() {
+  if (formData.password !== formData.confirmPassword) {
+    alert('Passwords do not match!');
+    return;
+  }
+  
   showSuccessMessage = true;
   startCountdown();
-  console.log('Health Officer Data:', formData);
 }
 
 function startCountdown() {
@@ -71,15 +82,13 @@ onMount(() => {
     if (countdownInterval) clearInterval(countdownInterval);
   };
 });
-
-
 </script>
 
 <div class="page-wrapper">
   <div class="header-section">
     <div class="form-header">
-      <h2>Health Officer Registration</h2>
-      <p>Complete your professional registration details</p>
+      <h2>Medical Officer Registration</h2>
+      <p>Complete your  professional registration details below</p>
     </div>
     <button class="close-button" aria-label="Close registration modal" on:click={() => window.location.href = '/'}>
       <i class="bi bi-x-lg"></i>
@@ -87,26 +96,29 @@ onMount(() => {
   </div>
 
   <form class="registration-form" on:submit|preventDefault={handleSubmit}>
-    <!-- License ID and County -->
+    <!-- Row 1: ID and County -->
     <div class="form-row">
-      <div class="form-group">
+  <div class="form-group">
         <div class="form-floating">
           <input {...createInputProps('licenseId', 'text', formData.licenseId)} 
-                 id="licenseId" placeholder="License ID"/>
+                 placeholder="Medical License ID" required/>
           <label for="licenseId">
             <i class="bi bi-shield-check"></i> Medical License ID
           </label>
         </div>
       </div>
+</div>
 
-    <!-- Name and Email -->
+
+
+    <!-- Row 2: Name and Email -->
     <div class="form-row">
       <div class="form-group">
         <div class="form-floating">
           <input {...createInputProps('fullName', 'text', formData.fullName)} 
                  id="fullName" placeholder="Full Name" required/>
           <label for="fullName">
-            <i class="bi bi-person-badge"></i> Full Name
+            <i class="bi bi-person"></i> Full Name
           </label>
         </div>
       </div>
@@ -116,16 +128,16 @@ onMount(() => {
           <input {...createInputProps('email', 'email', formData.email)} 
                  id="email" placeholder="Email" required/>
           <label for="email">
-            <i class="bi bi-envelope"></i> Professional Email
+            <i class="bi bi-envelope"></i> Email Address
           </label>
         </div>
       </div>
     </div>
 
-    <!-- Mobile and County -->
-    <div class="form-row">
-      <div class="form-group">
-        <div class="form-floating">
+    <!-- Row 3: Mobile -->
+    <div class="form-row mobile-row">
+      <div class="form-group mobile-group">
+        <div class="form-floating mobile-container">
           <div class="input-group">
             <span class="input-group-text">+254</span>
             <input {...createInputProps('mobile', 'tel', formData.mobile)} 
@@ -133,29 +145,33 @@ onMount(() => {
           </div>
         </div>
       </div>
+    </div>
 
+   
     <button type="submit" class="submit-button">
-      <i class="bi bi-check-circle"></i> Complete Professional Registration
+      <i class="bi bi-check-circle"></i> Complete professional Registration
     </button>
 
     <div class="login-link">
       Already registered? <a href="/login">Login here</a>
     </div>
   </form>
-  {#if showSuccessMessage}
+  <!-- Add this right after your form closing tag -->
+{#if showSuccessMessage}
   <div class="success-modal">
     <div class="success-content">
       <i class="bi bi-check-circle-fill success-icon"></i>
       <h3>Registration Successful!</h3>
-      <p>Your request has been sent. Please check your SMS or email for next steps.</p>
+      <p>Your request has been sent Waiting Approval. Please check your SMS or email for next steps.</p>
       <p class="countdown">Closing in {countdown} seconds...</p>
     </div>
   </div>
 {/if}
+
 </div>
 
 <style>
-/* Add to your style section */
+
 .success-modal {
   position: fixed;
   top: 0;
@@ -208,6 +224,14 @@ onMount(() => {
     transform: translateY(0);
   }
 }
+
+@media (max-width: 480px) {
+  .success-content {
+    padding: 1.5rem;
+    width: 85%;
+  }
+}
+
 
   .header-section {
     width: 100%;

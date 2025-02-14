@@ -512,26 +512,45 @@ let formErrors = {
 
     <!-- Education Section -->
     {#if currentSection === 'education'}
-      <div class="form-section" role="region" aria-labelledby="education-heading">
-        <h3 id="education-heading"><i class="bi bi-book"></i> Education & Skills</h3>
-        <!-- Fix certificate upload label -->
-        <div class="col-12">
-          <label for="certificateUpload" class="form-label">Certificates & Qualifications</label>
-          <div class="certificate-uploads">
-            <input 
-              type="file"
-              id="certificateUpload"
-              accept=".pdf,.jpg,.png"
-              on:change={handleCertificateUpload}
-              aria-describedby="certificateHelp"
-            />
-            <div id="certificateHelp" class="form-text">
-              Accepted formats: PDF, JPG, PNG (max 5MB)
-            </div>
-          </div>
+  <div class="form-section animate-in" role="region" aria-labelledby="education-heading">
+    <h3 id="education-heading"><i class="bi bi-book"></i> Education & Skills</h3>
+    <div class="row g-4">
+      <div class="col-12">
+        <div class="form-check mb-3">
+          <input 
+            type="checkbox" 
+            class="form-check-input" 
+            id="noFormalEducation"
+            bind:checked={userResponses.educationInfo.noFormalEducation}
+          />
+          <label class="form-check-label" for="noFormalEducation">
+            No Formal Education
+          </label>
         </div>
       </div>
-    {/if}
+
+      {#if !userResponses.educationInfo.noFormalEducation}
+        <div class="col-md-6">
+          <label for="highestLevel" class="form-label">Highest Level of Education</label>
+          <select {...createSelectProps('highestLevel', userResponses.educationInfo.highestLevel)}>
+            <option value="">Select Education Level</option>
+            {#each educationLevels as level}
+              <option value={level}>{level}</option>
+            {/each}
+          </select>
+        </div>
+
+        
+      {/if}
+
+    
+    
+
+      
+    </div>
+  </div>
+{/if}
+
 
 
    {#if currentSection === 'nextOfKin'}
