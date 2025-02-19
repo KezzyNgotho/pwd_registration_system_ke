@@ -167,49 +167,116 @@ function handleDisabilitySelect(disability) {
 
   /* Navbar Styles */
   .navbar {
-    backdrop-filter: blur(10px);
-    background-color: rgba(255, 255, 255, 0.95) !important;
-    border-bottom: 2px solid rgba(39, 102, 123, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+
+.navbar-brand {
+  gap: 0.5rem;
+}
+
+.brand-icon {
+  color: #27667B;
+  font-size: 1.5rem;
+}
+
+.brand-text {
+  color: #27667B;
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: -0.5px;
+}
+
+.nav-link {
+  color: #2c3e50;
+  font-weight: 500;
+  padding: 0.5rem 1.2rem;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #27667B;
+}
+
+.dropdown-menu {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 0.8rem 0;
+}
+
+.dropdown-item {
+  padding: 0.6rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+  color: #27667B;
+  transform: translateX(5px);
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.btn {
+  padding: 0.6rem 1.5rem;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-login {
+  color: #27667B;
+  border: 2px solid #27667B;
+  background: transparent;
+}
+
+.btn-login:hover {
+  background: rgba(39, 102, 123, 0.1);
+  transform: translateY(-2px);
+}
+
+.btn-register {
+  background: #27667B;
+  color: white;
+  border: none;
+}
+
+.btn-register:hover {
+  background: #1e4f5f;
+  transform: translateY(-2px);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 991px) {
+  .navbar-collapse {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-top: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   }
 
-  .nav-link {
-    position: relative;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    margin: 0 0.25rem;
-  }
-
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background-color: #27667B;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translateX(-50%);
-  }
-
-  .nav-link:hover::after,
-  .nav-link.active::after {
+  .nav-buttons {
+    margin-top: 1rem;
+    flex-direction: column;
     width: 100%;
   }
 
-  /* Dropdown Animations */
-  .dropdown-menu {
-    margin-top: 0.75rem;
-    border-radius: 12px;
-    border: 2px solid rgba(39, 102, 123, 0.1);
-    animation: dropdownFade 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  .btn {
+    width: 100%;
   }
+}
 
-  .dropdown-item {
-    padding: 0.75rem 1.25rem;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 8px;
-    margin: 0.25rem;
-  }
+
+  
 
   /* Container & Card Styles */
   .image-container {
@@ -378,7 +445,7 @@ function handleDisabilitySelect(disability) {
   /* Hover Effects */
   .image-container {
     position: relative;
-    max-width: 540px;
+    max-width: 500px;
     margin: 0 auto;
   }
 
@@ -387,15 +454,15 @@ function handleDisabilitySelect(disability) {
     border: 2px solid #27667B;
     border-radius: 24px;
     padding: 12px;
-    background: linear-gradient(145deg, rgba(39, 102, 123, 0.05), rgba(39, 102, 123, 0.02));
+    //background: linear-gradient(145deg, rgba(39, 102, 123, 0.05), rgba(39, 102, 123, 0.02));
   }
 
   .main-image {
     width: 100%;
     height: 400px;
     object-fit: cover;
-    border-radius: 16px;
-    border: 2px solid rgba(39, 102, 123, 0.1);
+    //border-radius: 16px;
+    //border: 2px solid rgba(39, 102, 123, 0.1);
   }
 
   .decoration-dot {
@@ -791,156 +858,79 @@ function handleDisabilitySelect(disability) {
 </div>
 {:else}
 
-<!-- Navbar with reduced height -->
-<!-- Enhanced Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm py-2">
+<nav class="navbar navbar-expand-lg fixed-top py-2">
   <div class="container">
-    <a class="navbar-brand fs-4 fw-bold" style="color: #27667B" href="/">
-      <i class="bi bi-heart-pulse me-2" aria-hidden="true"></i>
-      <span>PWD Connect</span>
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center" href="/">
+      <i class="bi bi-heart-pulse brand-icon"></i>
+      <span class="brand-text">PWD Connect</span>
     </a>
-    
-    <button 
-      class="navbar-toggler" 
-      type="button" 
-      data-bs-toggle="collapse" 
-      data-bs-target="#navbarNav"
-      aria-controls="navbarNav"
-      aria-expanded="false"
-      aria-label="Toggle navigation menu"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
 
+    <!-- Mobile Toggle -->
+    <button 
+    class="navbar-toggler" 
+    type="button" 
+    data-bs-toggle="collapse" 
+    data-bs-target="#navbarNav"
+    aria-controls="navbarNav"
+    aria-expanded="false"
+    aria-label="Toggle navigation menu"
+    >
+  <span class="navbar-toggler-icon" aria-hidden="true"></span>
+</button>
+
+
+    <!-- Nav Items -->
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav mx-auto">
-  <li class="nav-item px-2">
-    <a class="nav-link" href="/home" aria-current="page">Home</a>
-  </li>
-
-  <li class="nav-item dropdown px-2">
-    <button 
-      class="nav-link dropdown-toggle" 
-      id="aboutDropdownBtn"
-      aria-expanded="false"
-      aria-controls="aboutDropdown"
-      data-bs-toggle="dropdown"
-    >
-      About Us
-    </button>
-    <ul class="dropdown-menu border-0 shadow-sm" id="aboutDropdown">
-      <li><a class="dropdown-item" href="/mission">Our Mission</a></li>
-      <li><a class="dropdown-item" href="/team">Our Team</a></li>
-      <li><a class="dropdown-item" href="/partners">Partners</a></li>
-    </ul>
-  </li>
-
-  <li class="nav-item dropdown px-2">
-    <button 
-      class="nav-link dropdown-toggle" 
-      id="servicesDropdownBtn"
-      aria-expanded="false"
-      aria-controls="servicesDropdown"
-      data-bs-toggle="dropdown"
-    >
-      Services
-    </button>
-    <ul class="dropdown-menu border-0 shadow-sm" id="servicesDropdown">
-      <li><a class="dropdown-item" href="/services/registration">Registration</a></li>
-      <li><a class="dropdown-item" href="/services/benefits">Benefits</a></li>
-    </ul>
-  </li>
-
-  <!-- Search Button -->
-  <button 
-    class="btn btn-link text-decoration-none p-0" 
-    type="button"
-    id="searchBtn"
-    aria-label="Open search"
-    data-bs-toggle="dropdown"
-    aria-expanded="false"
-  >
-    <i class="bi bi-search fs-5" style="color: #27667B" aria-hidden="true"></i>
-  </button>
-
-
-       <li class="nav-item dropdown px-2">
-  <button 
-    class="nav-link dropdown-toggle" 
-    id="resourcesDropdownBtn"
-    aria-expanded="false"
-    aria-controls="resourcesDropdown"
-    data-bs-toggle="dropdown"
-  >
-    Resources
-  </button>
-  <ul class="dropdown-menu border-0 shadow-sm" id="resourcesDropdown">
-    <li><a class="dropdown-item" href="/resources/guides">User Guides</a></li>
-    <li><a class="dropdown-item" href="/resources/faqs">FAQs</a></li>
-    <li><a class="dropdown-item" href="/resources/downloads">Downloads</a></li>
-  </ul>
-</li>
-
-<li class="nav-item dropdown px-2">
-  <button 
-    class="nav-link dropdown-toggle" 
-    id="supportDropdownBtn"
-    aria-expanded="false"
-    aria-controls="supportDropdown"
-    data-bs-toggle="dropdown"
-  >
-    Support
-  </button>
-  <ul class="dropdown-menu border-0 shadow-sm" id="supportDropdown">
-    <li><a class="dropdown-item" href="/support/contact">Contact Us</a></li>
-    <li><a class="dropdown-item" href="/support/help">Help Center</a></li>
-    <li><a class="dropdown-item" href="/support/ticket">Submit Ticket</a></li>
-  </ul>
-</li>
-
-
-       <div class="d-flex gap-3 align-items-center">
-        <div class="dropdown">
-          <button 
-            class="btn btn-link text-decoration-none p-0" 
-            type="button"
-            aria-label="Search"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i class="bi bi-search fs-5" style="color: #27667B" aria-hidden="true"></i>
-          </button>
-          <div class="dropdown-menu dropdown-menu-end p-3 border-0 shadow-sm" style="width: 300px">
-            <input 
-              type="search" 
-              class="form-control" 
-              placeholder="Search..."
-              aria-label="Search input"
-            >
-          </div>
-        </div>
+        <li class="nav-item">
+          <a class="nav-link" href="/home">Home</a>
+        </li>
         
-        <button 
-          class="btn btn-outline-primary px-4" 
-          type="button"
-          on:click={handleLoginClick}
-        >
-          Login
-        </button>
-        
-        <button 
-          class="btn btn-primary px-4" 
-          type="button"
-          on:click={handleGetStarted}
-        >
-          Register
-        </button>
+        <!-- Services Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="/services" role="button" data-bs-toggle="dropdown">
+            Services
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/services/registration">Registration</a></li>
+            <li><a class="dropdown-item" href="/services/benefits">Benefits</a></li>
+          </ul>
+        </li>
+
+        <!-- Resources Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="/resources" role="button" data-bs-toggle="dropdown">
+            Resources
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/resources/guides">User Guides</a></li>
+            <li><a class="dropdown-item" href="/resources/faqs">FAQs</a></li>
+            <li><a class="dropdown-item" href="/resources/downloads">Downloads</a></li>
+          </ul>
+        </li>
+
+        <!-- Support Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="support" role="button" data-bs-toggle="dropdown">
+            Support
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/support/contact">Contact Us</a></li>
+            <li><a class="dropdown-item" href="/support/help">Help Center</a></li>
+            <li><a class="dropdown-item" href="/support/ticket">Submit Ticket</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <!-- Auth Buttons -->
+      <div class="nav-buttons">
+       <button class="btn btn-login" on:click={handleLoginClick}>Login</button>
+  <button class="btn btn-register" on:click={handleGetStarted}>Register</button>
       </div>
     </div>
   </div>
 </nav>
-
-
 
 <!-- Hero Section with improved layout -->
 <section class="hero min-vh-100 d-flex align-items-center bg-white" style="padding-top: 5rem;">

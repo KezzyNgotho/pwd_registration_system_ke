@@ -120,8 +120,8 @@ function formatAddress(address) {
     { icon: 'bi-clipboard-check', label: 'Assessments', view: 'assessments' },
     { icon: 'bi-calendar-event', label: 'Appointments', view: 'appointments' },
     { icon: 'bi-file-earmark-text', label: 'Documents', view: 'documents' },
-    { icon: 'bi-bell', label: 'Notifications', view: 'notifications' },
-    { icon: 'bi-gear', label: 'Settings', view: 'settings' },
+    //{ icon: 'bi-bell', label: 'Notifications', view: 'notifications' },
+    //{ icon: 'bi-gear', label: 'Settings', view: 'settings' },
     { icon: 'bi-box-arrow-right', label: 'Logout', view: 'logout', action: handleLogout }
    
   ];
@@ -410,7 +410,7 @@ function formatAddress(address) {
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  margin: 4px 0;
+  margin: 2px 0;
   border-radius: 8px;
   transition: all 0.2s ease;
   color: #000;
@@ -433,7 +433,7 @@ function formatAddress(address) {
   padding: 2rem 1rem;
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  margin-bottom: 2rem;
+  margin-bottom:  1rem;
 }
 
 .avatar img {

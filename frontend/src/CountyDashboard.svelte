@@ -39,17 +39,47 @@
 
   // Health officers data
   const healthOfficers = [
-    {
-      id: 1,
-      name: 'Dr. Sarah Johnson',
-      role: 'Chief Medical Officer',
-      department: 'Public Health',
-      status: 'active',
-      cases: 145,
-      rating: 4.8
-    },
-    // Add more officers
-  ];
+  {
+    id: 1,
+    name: 'Dr. Sarah Johnson',
+    role: 'Chief Medical Officer',
+    department: 'Public Health',
+    status: 'active',
+    cases: 145,
+    rating: 4.8,
+    avatar: '/avatars/sarah.jpg',
+    specialization: 'Epidemiology',
+    certifications: ['MPH', 'PhD'],
+    availability: 'On Duty'
+  },
+  {
+    id: 2,
+    name: 'Dr. Michael Chen',
+    role: 'Senior Health Officer',
+    department: 'Emergency Services',
+    status: 'active',
+    cases: 98,
+    rating: 4.6,
+    avatar: '/avatars/michael.jpg',
+    specialization: 'Emergency Medicine',
+    certifications: ['MD'],
+    availability: 'On Call'
+  },
+  {
+    id: 3,
+    name: 'Dr. Emily Rodriguez',
+    role: 'Community Health Lead',
+    department: 'Community Health',
+    status: 'active',
+    cases: 112,
+    rating: 4.9,
+    avatar: '/avatars/emily.jpg',
+    specialization: 'Public Health',
+    certifications: ['MPH', 'DrPH'],
+    availability: 'Available'
+  }
+];
+
 
   // Departments data
   const departments = [
@@ -70,9 +100,7 @@
   <div class="dashboard-modal">
     <div class="modal-content">
       <!-- Close button -->
-      <button class="close-modal" aria-label="Close dashboard modal" on:click={() => isOpen = false}>
-        <i class="bi bi-x-lg"></i>
-      </button>
+      
 
       <div class="dashboard-layout">
         <!-- Navigation -->
@@ -93,15 +121,7 @@
               Health Officers
             </button>
 
-            <button class:active={currentSection === 'departments'} on:click={() => currentSection = 'departments'}>
-              <i class="bi bi-building"></i>
-              Departments
-            </button>
 
-            <button class:active={currentSection === 'reports'} on:click={() => currentSection = 'reports'}>
-              <i class="bi bi-file-text"></i>
-              Reports
-            </button>
 
             <button class:active={currentSection === 'profile'} on:click={() => currentSection = 'profile'}>
               <i class="bi bi-person"></i>
@@ -310,6 +330,87 @@
               </div>
             </div>
           {/if}
+          {#if currentSection === 'settings'}
+  <div class="settings-container">
+    <!-- System Settings -->
+    <div class="settings-section">
+      <h3>System Settings</h3>
+      <div class="settings-grid">
+        <div class="setting-card">
+          <div class="setting-header">
+            <i class="bi bi-bell"></i>
+            <h4>Notifications</h4>
+          </div>
+          <div class="setting-controls">
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+            <span>Email Notifications</span>
+          </div>
+          <div class="setting-controls">
+            <label class="switch">
+              <input type="checkbox">
+              <span class="slider"></span>
+            </label>
+            <span>SMS Alerts</span>
+          </div>
+        </div>
+
+        <div class="setting-card">
+          <div class="setting-header">
+            <i class="bi bi-shield-lock"></i>
+            <h4>Security</h4>
+          </div>
+          <div class="setting-controls">
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+            <span>Two-Factor Authentication</span>
+          </div>
+          <button class="setting-btn">Change Password</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Management -->
+    <div class="settings-section">
+      <h3>User Management</h3>
+      <div class="user-roles-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Access Level</th>
+              <th>Users</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Administrator</td>
+              <td>Full Access</td>
+              <td>3 Users</td>
+              <td>
+                <button class="edit-role">Edit</button>
+              </td>
+            </tr>
+            <tr>
+              <td>Manager</td>
+              <td>Limited Access</td>
+              <td>8 Users</td>
+              <td>
+                <button class="edit-role">Edit</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{/if}
+
         </main>
       </div>
     </div>
@@ -756,4 +857,183 @@
     background: #f1f5f9;
     color: #0f172a;
   }
+
+  .settings-container {
+  padding: 1.5rem;
+}
+
+.settings-section {
+  margin-bottom: 2rem;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.setting-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.setting-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.setting-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #27667B;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+.user-management {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.user-roles-table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.user-roles-table table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.user-roles-table th {
+  background: #f8fafc;
+  padding: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  text-align: left;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.user-roles-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: #475569;
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.role-badge.admin {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.role-badge.manager {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.role-badge.officer {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.access-level {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.access-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.full-access {
+  background: #22c55e;
+}
+
+.limited-access {
+  background: #f59e0b;
+}
+
+.edit-role {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  background: #27667b;
+  color: white;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-role:hover {
+  background: #1e4f63;
+  transform: translateY(-1px);
+}
+
+.user-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  background: #f1f5f9;
+  border-radius: 20px;
+  font-size: 0.875rem;
+}
+
+
 </style>
