@@ -181,21 +181,7 @@ onMount(() => {
       .filter((_, i) => i !== index);
   }
 
-  function calculateProgress(responses) {
-    let totalFields = 0;
-    let filledFields = 0;
 
-    for (const section in responses) {
-      for (const field in responses[section]) {
-        if (field !== 'certificates') {
-          totalFields++;
-          if (responses[section][field]) filledFields++;
-        }
-      }
-    }
-
-    return Math.round((filledFields / totalFields) * 100);
-  }
 
   function getSectionForField(field) {
     const fieldMappings = {
@@ -353,6 +339,45 @@ let formErrors = {
 
 
 
+function calculateProgress(responses) {
+  const sections = {
+    personalInfo: {
+      required: ['name', 'idNumber', 'dateOfBirth', 'gender', 'mobileNumber', 'county'],
+      optional: ['maritalStatus', 'emailAddress', 'subCounty']
+    },
+    educationInfo: {
+      required: ['highestLevel'],
+      optional: ['institution', 'yearCompleted', 'specialization', 'skills', 'certificates']
+    },
+    nextOfKin: {
+      required: ['name', 'relationship', 'mobileNumber'],
+      optional: ['alternativeContact']
+    }
+  };
+
+  let totalFields = 0;
+  let completedFields = 0;
+
+  for (const section in sections) {
+    const required = sections[section].required;
+    const optional = sections[section].optional;
+    
+    totalFields += required.length;
+    
+    required.forEach(field => {
+      if (responses[section][field]) completedFields++;
+    });
+
+    optional.forEach(field => {
+      if (responses[section][field]) {
+        totalFields++;
+        completedFields++;
+      }
+    });
+  }
+
+  return Math.round((completedFields / totalFields) * 100);
+}
 
 
 
@@ -363,56 +388,49 @@ let formErrors = {
 
 
 
+<div class="modal-overlay">
+  <div class="modal-container">
+    <!-- Header -->
+    <div class="modal-header">
+      <h2>Registration Form for PWD'S</h2>
+      <button 
+        class="close-button" 
+        on:click={() => window.location.href = '/'} 
+        aria-label="Close and return to home page"
+      >
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+    </div>
 
-<div class="registration-container {disability}-mode" role="form">
-
-  <!-- Assistive Controls -->
- <button 
-  class="close-button" 
-  on:click={() => window.location.href = '/'} 
-  aria-label="Close and return to home page"
->
-  <i class="bi bi-x-lg" aria-hidden="true"></i>
-</button>
-
-
-
-  <!-- Progress Bar -->
-  <div class="progress-wrapper mb-4">
-    <div class="progress" role="progressbar" aria-valuenow={formProgress} aria-valuemin="0" aria-valuemax="100">
-            <div class="progress-steps" role="tablist">
-      {#each sections as section}
-        <div
-          role="tab"
-          tabindex="0"
-          class="progress-step {currentSection === section.id ? 'active' : ''}"
-          aria-selected={currentSection === section.id}
-          id={`tab-${section.id}`}
-          aria-controls={`panel-${section.id}`}
-          on:keydown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              currentSection = section.id;
-              updateProgress();
-            }
-          }}
-          on:click={() => {
-            currentSection = section.id;
-            updateProgress();
-          }}
-        >
-          <i class={`bi ${section.icon}`} aria-hidden="true"></i>
-          <span>{section.title}</span>
+    <!-- Progress bar -->
+    <div class="progress-wrapper">
+      <div class="progress" role="progressbar" aria-valuenow={formProgress} aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar" style="width: {formProgress}%">
+          {formProgress}%
         </div>
+      </div>
+    </div>
+
+    <!-- Section navigation -->
+    <div class="section-tabs">
+      {#each sections as section}
+        <button 
+          class="section-tab {currentSection === section.id ? 'active' : ''}"
+          on:click={() => currentSection = section.id}
+        >
+          <i class={section.icon}></i>
+          {section.title}
+        </button>
       {/each}
     </div>
-  </div>
-</div>
-  <!-- Form Sections -->
- <form class="registration-form" on:submit|preventDefault={handleSubmit}>
-  {#if currentSection === 'personal'}
-    <div class="form-section animate-in" role="tabpanel">
-      <h3><i class="bi bi-person-circle" aria-hidden="true"></i> Personal Information</h3>
-      <div class="row g-4">
+
+    <!-- Form Sections -->
+    <form class="registration-form" on:submit|preventDefault={handleSubmit}>
+      {#if currentSection === 'personal'}
+        <div class="form-section animate-in" role="tabpanel">
+          <h3><i class="bi bi-person-circle" aria-hidden="true"></i> Personal Information</h3>
+          <div class="row g-4">
+          
         <div class="col-md-6">
           <label for="fullName" class="form-label">Full Name</label>
           <input 
@@ -504,9 +522,9 @@ let formErrors = {
   {/if}
 
   {#if currentSection === 'education'}
-  <div class="form-section animate-in" role="region" aria-labelledby="education-heading">
-    <h3 id="education-heading"><i class="bi bi-book"></i> Education & Skills</h3>
-    <div class="row g-4">
+   <div class="form-section animate-in" role="region" aria-labelledby="education-heading">
+          <h3 id="education-heading"><i class="bi bi-book"></i> Education & Skills</h3>
+          <div class="row g-4">
       <div class="col-12">
         <div class="checkbox-wrapper">
           <input 
@@ -694,147 +712,95 @@ let formErrors = {
     </div>
   </form>
 
-  <!-- Add right before closing </div> of page-wrapper -->
-{#if showSuccessMessage}
-  <div class="success-modal">
-    <div class="success-content">
-      <i class="bi bi-check-circle-fill success-icon"></i>
-      <h3>Welcome to Our Community!</h3>
-      <p>Your registration was successful.</p>
-      <div class="registration-details">
-        <p>Registration Number: <strong>REG-{registrationNumber}</strong></p>
-        <p>Please check your SMS for this registration number.</p>
+ 
+ <!-- Success Message -->
+    {#if showSuccessMessage}
+      <div class="success-modal">
+        <div class="success-content">
+          <i class="bi bi-check-circle-fill success-icon"></i>
+          <h3>Welcome to Our Community!</h3>
+          <p>Your registration was successful.</p>
+          <div class="registration-details">
+            <p>Registration Number: <strong>REG-{registrationNumber}</strong></p>
+            <p>Please check your SMS for this registration number.</p>
+          </div>
+          <p>Login to complete your profile setup and access our services.</p>
+          <p class="countdown">Redirecting to login in {countdown} seconds...</p>
+        </div>
       </div>
-      <p>Login to complete your profile setup and access our services.</p>
-      <p class="countdown">Redirecting to login in {countdown} seconds...</p>
-    </div>
+    {/if}
   </div>
-{/if}
-
 </div>
+
+
+
 <style>
-/* Add to your style section */
-.success-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  animation: fadeIn 0.3s ease-out;
-}
 
-.success-content {
-  background: white;
-  padding: 2.5rem;
-  border-radius: 15px;
-  text-align: center;
-  max-width: 500px;
-  width: 90%;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15);
-  animation: slideIn 0.3s ease-out;
-}
-
-.success-icon {
-  font-size: 4rem;
-  color: #28a745;
-  margin-bottom: 1.5rem;
-}
-
-.registration-details {
-  background: #f8f9fa;
-  padding: 1rem;
-  border-radius: 10px;
-  margin: 1.5rem 0;
-}
-
-.registration-details strong {
-  color: #27667B;
-  font-size: 1.2rem;
-}
-
-.countdown {
-  margin-top: 1.5rem;
-  color: #666;
-  font-size: 0.9rem;
-}
-
-/* Add styles for gesture feedback */
-  .gesture-feedback {
+ .modal-overlay {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 2rem;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-  }
-
-  .gesture-feedback.active {
-    opacity: 1;
-  }
-
-  /* Add styles for assistive controls */
-  .assistive-controls {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    display: flex;
-    gap: 1rem;
-    z-index: 1000;
-  }
-
-  .btn-voice, .btn-help {
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    padding: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #27667B;
-    color: white;
-    box-shadow: 0 4px 15px rgba(39, 102, 123, 0.3);
-  }
-  /* Modern Container Styles */
-  .registration-container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 3rem;
-    background: linear-gradient(145deg, #ffffff, #f8f9fa);
-    border-radius: 30px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    z-index: 1000;
   }
 
-  /* Glassmorphism Form Sections */
-  .form-section {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    padding: 1.5rem;
+  .modal-container {
+    background: white;
+    width: 90%;
+    max-width: 1200px; /* Increased width */
+    height: 90vh;
     border-radius: 20px;
-     margin-bottom: 1rem;
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 2rem;
+    position: relative;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   }
 
-  /* Enhanced Progress Bar */
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-header h2 {
+    font-size: 1.75rem;
+    color: #27667B;
+    margin: 0;
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #27667B;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  .close-button:hover {
+    color: #1e4f5f;
+  }
+
   .progress-wrapper {
     background: rgba(255, 255, 255, 0.9);
-    padding: 2rem;
+    padding: 1rem;
     border-radius: 20px;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   .progress {
-    height: 15px !important;
+    height: 15px;
     background: #e9ecef;
     border-radius: 15px;
     overflow: hidden;
@@ -842,296 +808,140 @@ let formErrors = {
 
   .progress-bar {
     background: linear-gradient(90deg, #27667B, #4CAF50);
-    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 0.3s ease-in-out;
   }
 
-  /* Modern Form Controls */
-  .form-control, .form-select {
-  padding: 0.75rem 1rem;
-  font-size: 0.95rem;
-  border-radius: 8px;
-}
-
-
-
-.btn {
-  padding: 0.75rem 1.5rem;
-  font-size: 0.9rem;
-}
-
-
-  .form-control:focus, .form-select:focus {
-    border-color: #27667B;
-    box-shadow: 0 0 0 4px rgba(39, 102, 123, 0.15);
-    transform: translateY(-2px);
+  .section-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
   }
 
-  /* Floating Labels */
-  .form-label {
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 0.7rem;
+  .section-tab {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    background: #f8f9fa;
+    cursor: pointer;
     transition: all 0.3s ease;
   }
 
-  /* Enhanced Buttons */
+  .section-tab.active {
+    background: #27667B;
+    color: white;
+  }
+
+  .form-section {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .form-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+  }
+
   .btn {
-    padding: 1rem 2rem;
-    border-radius: 15px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
     font-weight: 600;
-    letter-spacing: 0.5px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-transform: uppercase;
-    font-size: 0.9rem;
+    transition: all 0.3s ease;
   }
 
   .btn-primary {
     background: linear-gradient(135deg, #27667B, #1e4f5f);
     border: none;
-    box-shadow: 0 4px 15px rgba(39, 102, 123, 0.2);
+    color: white;
   }
 
   .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(39, 102, 123, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(39, 102, 123, 0.3);
   }
 
-  /* Section Navigation */
-  .progress-steps {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 1.5rem;
-    padding: 0 1rem;
-  }
-
-  .step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.8rem;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    padding: 1rem;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.6);
-  }
-
-  .step.active {
-    background: rgba(39, 102, 123, 0.1);
-    transform: scale(1.05);
+  .btn-outline-primary {
+    border: 2px solid #27667B;
     color: #27667B;
-    font-weight: 600;
   }
 
-  /* Animations */
-  .animate-in {
-    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(40px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .registration-container {
-      padding: 1.5rem;
-      margin: 1rem;
-    }
-
-    .form-section {
-      padding: 1.5rem;
-    }
-
-    .btn {
-      width: 100%;
-      margin: 0.5rem 0;
-    }
-  }
-
-  .form-control.is-valid {
-    border-color: #198754;
-    padding-right: calc(1.5em + 0.75rem);
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right calc(0.375em + 0.1875rem) center;
-    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-  }
-
-  .completion-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #198754;
-    color: white;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  }
-
-  .step-icon {
-    position: relative;
-    width: 40px;
-    height: 40px;
-    background: #f8f9fa;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  }
-
-  .step.complete .step-icon {
-    background: #198754;
+  .btn-outline-primary:hover {
+    background: #27667B;
     color: white;
   }
 
-  .form-section {
-    transition: transform 0.3s ease, opacity 0.3s ease;
+  .btn-success {
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+    border: none;
+    color: white;
   }
 
-  .form-section.sliding-out {
-    transform: translateX(-100%);
-    opacity: 0;
+  .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
   }
 
-  .form-section.sliding-in {
-    transform: translateX(0);
-    opacity: 1;
+  .success-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
   }
 
-  /* Additional modern styling */
-  .invalid-feedback {
-    display: block;
-    color: #dc3545;
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
+  .success-content {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15);
+    animation: slideIn 0.3s ease-out;
   }
 
-  .form-group {
-    position: relative;
+  .success-icon {
+    font-size: 4rem;
+    color: #28a745;
     margin-bottom: 1.5rem;
   }
 
-  .form-control:focus {
-    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+  .registration-details {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 10px;
+    margin: 1.5rem 0;
   }
 
-  .step.active .step-icon {
-    transform: scale(1.1);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  .registration-details strong {
+    color: #27667B;
+    font-size: 1.2rem;
   }
 
-  .close-button {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
+  .countdown {
+    margin-top: 1.5rem;
+    color: #666;
+    font-size: 0.9rem;
+  }
 
-.close-button:hover {
-  background: #f8f9fa;
-  transform: rotate(90deg);
-}
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
 
-.close-button i {
-  font-size: 1.2rem;
-  color: #27667B;
-}
-
-.checkbox-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-}
-
-.custom-checkbox {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  accent-color: #27667B;
-}
-
-.custom-checkbox-label {
-  font-weight: 500;
-  color: #2c3e50;
-  cursor: pointer;
-  user-select: none;
-}
-
-.custom-checkbox:checked + .custom-checkbox-label {
-  color: #27667B;
-}
-
-.certificate-upload {
-  border: 2px dashed #dee2e6;
-  padding: 1.5rem;
-  border-radius: 8px;
-  text-align: center;
-  transition: all 0.3s ease;
-}
-
-.certificate-upload:hover {
-  border-color: #27667B;
-  background: #f8f9fa;
-}
-
-.certificate-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.certificate-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background: #f8f9fa;
-  border-radius: 6px;
-}
-
-textarea.form-control {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.btn-danger {
-  background: #dc3545;
-  border: none;
-}
-
-.btn-danger:hover {
-  background: #bb2d3b;
-}
-
-
-
+  @keyframes slideIn {
+    from { transform: translateY(-20px); }
+    to { transform: translateY(0); }
+  }
 </style>

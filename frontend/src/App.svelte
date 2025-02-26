@@ -9,6 +9,7 @@
   import Login from "../src/login.svelte";
   import { Router, Link, Route } from 'svelte-routing';
   
+  
   import PWDDashboard from "../src/PWDDashboard.svelte"
   import CountyDashboard from "../src/CountyDashboard.svelte";
   import HealthDashboard from "../src/HealthOfficerDashboard.svelte";
@@ -21,6 +22,15 @@
   // Create base URL for router
 
 
+ // Add these functions to handle navigation
+  function handleClose() {
+    window.location.href = '/';
+  }
+
+  function handleBack() {
+    showRoleSelection = true;
+    showDisabilitySelection = false;
+  }
 
   let showRoleSelection = false;
   let showDisabilitySelection = false;
@@ -31,18 +41,63 @@
   let selectedRole = '';
   let selectedDisability = '';
 
-  const roles = [
-    { id: 'pwd', label: 'Person with Disability' },
-    { id: 'county Officer', label: 'County officer' },
-     { id: 'Health Officer', label: 'Health officer' }
-  ];
+ const roles = [
+  { 
+    id: 'pwd', 
+    label: 'Person with Disability',
+    icon: 'bi-person-fill',
+    description: 'Register and access PWD services'
+  },
+  { 
+    id: 'county Officer', 
+    label: 'County officer',
+    icon: 'bi-building-fill-check',
+    description: 'Manage county-level PWD services'
+  },
+  { 
+    id: 'Health Officer', 
+    label: 'Health officer',
+    icon: 'bi-hospital-fill',
+    description: 'Provide medical assessments'
+  },
+  {
+    id: 'proxy',
+    label: 'Register for a PWD',
+    icon: 'bi-people-fill',
+    description: 'Register on behalf of a PWD as a caregiver or guardian'
+  }
+];
+
+
+
 
   const disabilities = [
-    { id: 'visual', label: 'Visual Impairment' },
-    { id: 'hearing', label: 'Hearing Impairment' },
-    { id: 'physical', label: 'Physical Disability' },
-    { id: 'mental', label: 'Mental Disability' }
-  ];
+  { 
+    id: 'visual', 
+    label: 'Visual Impairment',
+    icon: 'bi-eye-fill',
+    description: 'Visual assistance and screen reader support'
+  },
+  { 
+    id: 'hearing', 
+    label: 'Hearing Impairment',
+    icon: 'bi-ear-fill',
+    description: 'Sign language and visual communication tools'
+  },
+  { 
+    id: 'physical', 
+    label: 'Physical Disability',
+    icon: 'bi-person-wheelchair',
+    description: 'Mobility assistance and accessibility features'
+  },
+  { 
+    id: 'mental', 
+    label: 'Mental Disability',
+    icon: 'bi-brain',
+    description: 'Cognitive support and simplified interface'
+  }
+];
+
 
   function handleGetStarted() {
     showRoleSelection = true;
@@ -155,6 +210,10 @@ function handleDisabilitySelect(disability) {
 
 
 <style>
+
+
+ 
+
   /* Modern Reset & Base Styles */
   :global(body) {
     margin: 0;
@@ -501,18 +560,7 @@ function handleDisabilitySelect(disability) {
   }
 
 
- .icon-wrapper {
-    width: 48px;
-    height: 48px;
-    margin: 0 auto 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #27667B;
-    border-radius: 12px;
-     color: white;
-     font-size: 24px;
-  }
+
 
   .feature-text h4 {
     font-size: 16px;
@@ -610,40 +658,119 @@ function handleDisabilitySelect(disability) {
 
 
    .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-   background: white;
-    backdrop-filter: blur(4px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+}
 
-  .modal-container {
-    width: 90%;
-    max-width: 600px;
-    margin: 1.5rem;
-    background: white;
-    border-radius: 1rem;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    transform: translateY(0);
-    animation: slideIn 0.3s ease-out;
-  }
+.modal-container {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 800px;
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: #27667B;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.close-button:hover {
+  transform: scale(1.1);
+  color: #1a4d5c;
+}
+
+.close-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+
+
+.close-button i {
+  font-size: 1.5rem;
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.header-icon {
+  font-size: 2.5rem;
+  color: #27667B;
+  margin-bottom: 1rem;
+}
+
+.header-accent {
+  height: 4px;
+  width: 60px;
+  background: #27667B;
+  margin: 1rem auto;
+  border-radius: 2px;
+}
+
+.icon-wrapper, .icon-container {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 1rem;
+}
+
+.icon-background {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  border-radius: 50%;
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+}
+
+.role-button:hover .icon-background,
+.disability-card:hover .icon-pulse {
+  transform: scale(1.2);
+}
+
+.icon-pulse {
+  position: absolute;
+  inset: 0;
+  border: 2px solid #27667B;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+
 
   .modal-content {
     padding: 2rem;
   }
 
-  .modal-header {
-    text-align: center;
-    margin-bottom: 2rem;
-    position: relative;
-  }
-
+ 
   .title {
     color: #1F2937;
     font-size: 2rem;
@@ -651,14 +778,7 @@ function handleDisabilitySelect(disability) {
     margin: 0;
   }
 
-  .header-accent {
-    width: 60px;
-    height: 4px;
-    background: #3B82F6;
-    margin: 1rem auto;
-    border-radius: 2px;
-  }
-
+ 
   .role-grid {
     display: grid;
     gap: 1rem;
@@ -720,14 +840,12 @@ function handleDisabilitySelect(disability) {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #27667B;
+    background: #fff;
     border-radius: 12px;
-  }
-
-  .icon-container i {
-    color: white;
     font-size: 24px;
   }
+
+  
 
   .disability-info {
     display: flex;
@@ -750,6 +868,43 @@ function handleDisabilitySelect(disability) {
     .disability-grid {
       grid-template-columns: 1fr;
     }
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .modal-container {
+    background: white;
+    width: 90%;
+    max-width: 1200px; /* Increased width */
+    height: 90vh;
+    border-radius: 20px;
+    padding: 2rem;
+    position: relative;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
   }
 </style>
 
@@ -774,87 +929,67 @@ function handleDisabilitySelect(disability) {
   <HealthOfficerReg role="Health Officer" />
 
   
-{:else if showRoleSelection}
-  <div class="modal-overlay">
-    <div class="modal-container">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2 class="title" style="color: #27667B">Choose Your Role</h2>
-          <div class="header-accent" style="background: #27667B"></div>
-        </div>
+    {:else if showRoleSelection}
+<div class="modal-overlay">
+  <div class="modal-container">
+    <button class="close-button" on:click={() => window.location.href = '/'}>
+      <i class="bi bi-x-circle-fill"></i>
+      <span class="close-text">Close</span>
+    </button>
 
-        <div class="role-grid">
-          {#each roles as role}
-            <button 
-              class="role-button"
-              on:click={() => handleRoleSelect(role.id)}
-            >
-              <div class="icon-wrapper">
-                {#if role.id === 'pwd'}
-                  <i class="bi bi-person-heart"></i>
-                {:else if role.id === 'county Officer'}
-                  <i class="bi bi-building"></i>
-                {:else}
-                  <i class="bi bi-hospital"></i>
-                {/if}
-              </div>
-              <span class="role-label">{role.label}</span>
-              <span class="role-description">
-                {#if role.id === 'pwd'}
-                  Register and access PWD services
-                {:else if role.id === 'county Officer'}
-                  Manage county-level PWD services
-                {:else}
-                  Provide medical assessments
-                {/if}
-              </span>
-            </button>
-          {/each}
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="header-icon">
+          <i class="bi bi-person-badge-fill"></i>
         </div>
+        <h2 class="title">Choose Your Role To Register</h2>
+        <div class="header-accent"></div>
+      </div>
+
+      <div class="role-grid">
+        {#each roles as role}
+          <button class="role-button" on:click={() => handleRoleSelect(role.id)}>
+            <div class="icon-container">
+              <i class="bi {role.icon}"></i>
+          
+            </div>
+            <span class="role-label">{role.label}</span>
+            <span class="role-description">{role.description}</span>
+          </button>
+        {/each}
+
       </div>
     </div>
   </div>
+</div>
 
 {:else if showDisabilitySelection}
-
 <div class="modal-overlay">
   <div class="modal-container">
+     <button class="close-button" on:click={handleClose}>
+      <i class="bi bi-x-circle-fill"></i>
+      <span class="close-text">Close</span>
+    </button>
+
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="title" style="color: #27667B">Select Disability Type</h2>
-        <div class="header-accent" style="background: #27667B"></div>
+        <div class="header-icon">
+          <i class="bi bi-heart-pulse-fill"></i>
+        </div>
+        <h2 class="title">Select Disability Type</h2>
+        <div class="header-accent"></div>
       </div>
 
       <div class="disability-grid">
         {#each disabilities as disability}
-          <button 
-            class="disability-card"
-            on:click={() => handleDisabilitySelect(disability.id)}
-          >
+          <button class="disability-card" on:click={() => handleDisabilitySelect(disability.id)}>
             <div class="icon-container">
-              {#if disability.id === 'visual'}
-                <i class="bi bi-eye"></i>
-              {:else if disability.id === 'hearing'}
-                <i class="bi bi-ear"></i>
-              {:else if disability.id === 'physical'}
-                <i class="bi bi-person-wheelchair"></i>
-              {:else if disability.id === 'mental'}
-                <i class="bi bi-brain"></i>
-              {/if}
+              <i class="bi {disability.icon}"></i>
+              <div class="icon-pulse"></div>
             </div>
             <div class="disability-info">
               <span class="disability-label">{disability.label}</span>
-              <span class="disability-description">
-                {#if disability.id === 'visual'}
-                  Visual assistance and screen reader support
-                {:else if disability.id === 'hearing'}
-                  Sign language and visual communication tools
-                {:else if disability.id === 'physical'}
-                  Mobility assistance and accessibility features
-                {:else if disability.id === 'mental'}
-                  Cognitive support and simplified interface
-                {/if}
-              </span>
+              <span class="disability-description">{disability.description}</span>
             </div>
           </button>
         {/each}
