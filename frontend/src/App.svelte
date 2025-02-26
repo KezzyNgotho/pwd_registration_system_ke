@@ -8,6 +8,8 @@
   import HealthOfficerReg from "../src/HealthOfficerRegistration.svelte";
   import Login from "../src/login.svelte";
   import { Router, Link, Route } from 'svelte-routing';
+
+  
   
   
   import PWDDashboard from "../src/PWDDashboard.svelte"
@@ -41,12 +43,20 @@
   let selectedRole = '';
   let selectedDisability = '';
 
- const roles = [
+
+
+const roles = [
   { 
     id: 'pwd', 
     label: 'Person with Disability',
     icon: 'bi-person-fill',
     description: 'Register and access PWD services'
+  },
+  { 
+    id: 'proxy', 
+    label: 'Register on Behalf',
+    icon: 'bi-people-fill',
+    description: 'Register for a PWD as a caregiver or guardian'
   },
   { 
     id: 'county Officer', 
@@ -59,16 +69,8 @@
     label: 'Health officer',
     icon: 'bi-hospital-fill',
     description: 'Provide medical assessments'
-  },
-  {
-    id: 'proxy',
-    label: 'Register for a PWD',
-    icon: 'bi-people-fill',
-    description: 'Register on behalf of a PWD as a caregiver or guardian'
   }
 ];
-
-
 
 
   const disabilities = [
@@ -106,20 +108,19 @@
 
 
 
-
+// Update handleRoleSelect function
 function handleRoleSelect(role) {
   selectedRole = role;
   showRoleSelection = false;
 
-  if (role === 'pwd') {
+  if (role === 'pwd' || role === 'proxy') {
     showDisabilitySelection = true;
-  } else if (role === 'county Officer') { // Match exact ID from roles array
+  } else if (role === 'county Officer') {
     showCountyOfficerReg = true;
-  } else if (role === 'Health Officer') { // Match exact ID from roles array
+  } else if (role === 'Health Officer') {
     showHealthOfficerReg = true;
   }
 }
-
 
 function handleDisabilitySelect(disability) {
   selectedDisability = disability;
@@ -1039,12 +1040,14 @@ function handleDisabilitySelect(disability) {
 
   {/if}
 
+// Update the registration component rendering
 {#if showReg}
-  <Reg role="pwd" disability={selectedDisability} />
-{:else if showCountyOfficerReg}
-  <CountyOfficerReg role="county Officer" />
-{:else if showHealthOfficerReg}
-  <HealthOfficerReg role="Health Officer" />
+  <Reg 
+    role={selectedRole} 
+    disability={selectedDisability}
+    isProxy={selectedRole === 'proxy'} 
+  />
+
 
   
     {:else if showRoleSelection}
