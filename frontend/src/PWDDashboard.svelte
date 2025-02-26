@@ -1,7 +1,7 @@
 <script>
 import { user } from '../src/authstore';
  import { pwdDashboardState } from '../src/dashboardStore.js';
-  import ImageUpload from '/home/keziah/pwd_reg_system/frontend/src/ImageUpload.svelte';
+  import ImageUpload from '../src/ImageUpload.svelte';
 
    let imageUrl = "../src/assets/icons8-user-50.png";
   let fileInput;

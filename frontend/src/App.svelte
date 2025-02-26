@@ -906,6 +906,124 @@ function handleDisabilitySelect(disability) {
     align-items: center;
     margin-bottom: 1.5rem;
   }
+
+  .ai-educator {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.section-title {
+  color: #27667B;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.section-description {
+  color: #6c757d;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.feature-item i {
+  font-size: 1.5rem;
+  color: #27667B;
+}
+
+.chat-box {
+  background: white;
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.chat-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.chat-message.ai i {
+  font-size: 1.5rem;
+  color: #27667B;
+}
+
+.chat-input {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  outline: none;
+}
+
+.send-btn {
+  background: #27667B;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.send-btn:hover {
+  background: #1e4f5f;
+}
+
+.ai-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.ai-icon {
+  font-size: 3rem;
+  color: #27667B;
+  margin-bottom: 2rem;
+}
+
+.ai-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.stat h4 {
+  color: #27667B;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.stat p {
+  color: #6c757d;
+  margin: 0;
+}
 </style>
 
 <Router>
@@ -1020,7 +1138,6 @@ function handleDisabilitySelect(disability) {
   <span class="navbar-toggler-icon" aria-hidden="true"></span>
 </button>
 
-
     <!-- Nav Items -->
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav mx-auto">
@@ -1039,35 +1156,18 @@ function handleDisabilitySelect(disability) {
           </ul>
         </li>
 
-        <!-- Resources Dropdown -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="/resources" role="button" data-bs-toggle="dropdown">
-            Resources
+        <!-- AI Educator -->
+        <li class="nav-item">
+          <a class="nav-link" href="/ai-educator">
+            <i class="bi bi-robot"></i> Personal AI Educator
           </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/resources/guides">User Guides</a></li>
-            <li><a class="dropdown-item" href="/resources/faqs">FAQs</a></li>
-            <li><a class="dropdown-item" href="/resources/downloads">Downloads</a></li>
-          </ul>
-        </li>
-
-        <!-- Support Dropdown -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="support" role="button" data-bs-toggle="dropdown">
-            Support
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/support/contact">Contact Us</a></li>
-            <li><a class="dropdown-item" href="/support/help">Help Center</a></li>
-            <li><a class="dropdown-item" href="/support/ticket">Submit Ticket</a></li>
-          </ul>
         </li>
       </ul>
 
       <!-- Auth Buttons -->
       <div class="nav-buttons">
-       <button class="btn btn-login" on:click={handleLoginClick}>Login</button>
-  <button class="btn btn-register" on:click={handleGetStarted}>Register</button>
+        <button class="btn btn-login" on:click={handleLoginClick}>Login</button>
+        <button class="btn btn-register" on:click={handleGetStarted}>Register</button>
       </div>
     </div>
   </div>
@@ -1219,6 +1319,90 @@ function handleDisabilitySelect(disability) {
       </div>
       <div class="col-lg-6">
         <img src={image} alt="Benefits" class="img-fluid rounded-4 shadow-lg">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI Educator Section -->
+<section class="ai-educator py-5 bg-gradient">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="ai-content">
+          <div class="badge-wrapper mb-4">
+            <span class="custom-badge">
+              <i class="bi bi-robot"></i>
+              AI-Powered Support
+            </span>
+          </div>
+          
+          <h2 class="section-title mb-4">
+            Your Personal AI Educator
+          </h2>
+          
+          <p class="section-description mb-4">
+            Get instant answers to your questions about PWD services, rights, and benefits. Our AI educator is available 24/7 to assist you.
+          </p>
+
+          <div class="features-grid">
+            <div class="feature-item">
+              <i class="bi bi-translate"></i>
+              <span>Multiple Language Support</span>
+            </div>
+            <div class="feature-item">
+              <i class="bi bi-clock-history"></i>
+              <span>24/7 Availability</span>
+            </div>
+            <div class="feature-item">
+              <i class="bi bi-shield-check"></i>
+              <span>Verified Information</span>
+            </div>
+          </div>
+
+          <div class="chat-preview mt-5">
+            <div class="chat-box">
+              <div class="chat-message ai">
+                <i class="bi bi-robot"></i>
+                <p>Hello! How can I help you today?</p>
+              </div>
+              <div class="chat-input">
+              <input 
+                type="text" 
+                placeholder="Ask me anything about PWD services..."
+                aria-label="Type your question about PWD services"
+              >
+              <button 
+                class="send-btn"
+                aria-label="Send message"
+              >
+                <i class="bi bi-send-fill" aria-hidden="true"></i>
+              </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="ai-visual">
+          <div class="ai-card">
+            <div class="ai-icon">
+              <i class="bi bi-cpu"></i>
+            </div>
+            <div class="ai-stats">
+              <div class="stat">
+                <h4>1M+</h4>
+                <p>Questions Answered</p>
+              </div>
+              <div class="stat">
+                <h4>98%</h4>
+                <p>Accuracy Rate</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

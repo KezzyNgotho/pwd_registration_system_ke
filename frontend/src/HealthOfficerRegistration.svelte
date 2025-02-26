@@ -84,16 +84,20 @@ onMount(() => {
 });
 </script>
 
-<div class="page-wrapper">
-  <div class="header-section">
-    <div class="form-header">
-      <h2>Medical Officer Registration</h2>
-      <p>Complete your  professional registration details below</p>
+
+   <div class="modal-overlay">
+  <div class="modal-container">
+    <!-- Header -->
+    <div class="modal-header">
+      <h2>Registration Form for Medical Officer</h2>
+      <button 
+        class="close-button" 
+        on:click={() => window.location.href = '/'} 
+        aria-label="Close and return to home page"
+      >
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
     </div>
-    <button class="close-button" aria-label="Close registration modal" on:click={() => window.location.href = '/'}>
-      <i class="bi bi-x-lg"></i>
-    </button>
-  </div>
 
   <form class="registration-form" on:submit|preventDefault={handleSubmit}>
     <!-- Row 1: ID and County -->
@@ -169,8 +173,64 @@ onMount(() => {
 {/if}
 
 </div>
+</div>
 
 <style>
+
+
+
+ .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .modal-container {
+    background: white;
+    width: 90%;
+    max-width: 1200px; /* Increased width */
+    height: 90vh;
+    border-radius: 20px;
+    padding: 2rem;
+    position: relative;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-header h2 {
+    font-size: 1.75rem;
+    color: #27667B;
+    margin: 0;
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #27667B;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
 
 .success-modal {
   position: fixed;
@@ -280,13 +340,7 @@ onMount(() => {
     padding: 1.5rem 0.5rem;
   }
 
-  .form-header h2 {
-    font-size: 2.4rem;
-    color: #27667B;
-    margin-bottom: 0.4rem;
-    font-weight: 600;
-    letter-spacing: -0.5px;
-  }
+
 
   .registration-form {
     width: 99%;
@@ -382,9 +436,7 @@ onMount(() => {
     .form-group {
       min-width: 100%;
     }
-    .form-header h2 {
-      font-size: 2rem;
-    }
+    
   }
 
   @media (max-width: 768px) {
@@ -395,9 +447,7 @@ onMount(() => {
       width: 92%;
       padding: 1.2rem;
     }
-    .form-header h2 {
-      font-size: 1.8rem;
-    }
+    
     .header-section {
       padding: 0 0.5rem;
     }
@@ -425,8 +475,6 @@ onMount(() => {
       min-width: 60px;
       font-size: 0.9rem;
     }
-    .form-header h2 {
-      font-size: 1.6rem;
-    }
+    
   }
 </style>
