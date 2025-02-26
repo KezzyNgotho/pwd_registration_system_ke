@@ -754,9 +754,9 @@ function calculateProgress(responses) {
   .modal-container {
     background: white;
     width: 90%;
-    max-width: 1200px; /* Increased width */
+    max-width: 1800px; /* Increased width */
     height: 90vh;
-    border-radius: 20px;
+    border-radius: 5px;
     padding: 2rem;
     position: relative;
     overflow-y: auto;
