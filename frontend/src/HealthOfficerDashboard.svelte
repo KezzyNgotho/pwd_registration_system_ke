@@ -81,10 +81,29 @@ function getAssessmentForm(type) {
 
 
 
+function handleSave() {
+  const success = saveAssessment(assessment);
+  if (success) {
+    // You can add notification logic here
+    console.log('Assessment saved successfully');
+  }
+}
 
 
 
-
+export function saveAssessment(assessment) {
+  try {
+    const savedData = {
+      ...assessment,
+      savedAt: new Date().toISOString()
+    };
+    localStorage.setItem(`assessment_${assessment.pwdId}`, JSON.stringify(savedData));
+    return true;
+  } catch (error) {
+    console.error('Error saving assessment:', error);
+    return false;
+  }
+}
 
 
 
@@ -152,10 +171,7 @@ function getAssessmentForm(type) {
               <i class="bi bi-clipboard-check"></i>
               Assessments
             </button>
-            <button class:active={currentSection === 'reports'} on:click={() => currentSection = 'reports'}>
-              <i class="bi bi-file-text"></i>
-              Reports
-            </button>
+        
             <button class:active={currentSection === 'profile'} on:click={() => currentSection = 'profile'}>
               <i class="bi bi-person"></i>
               Profile
@@ -262,7 +278,8 @@ function getAssessmentForm(type) {
                   </button>
                   
                   <div class="quick-actions">
-                    <button aria-label="Save assessment">
+                    
+                     <button aria-label="Save assessment" on:click={handleSave} class="save-btn">
                   <i class="bi bi-save"></i>
                 </button>
                 <button aria-label="Print assessment">
@@ -998,6 +1015,22 @@ function getAssessmentForm(type) {
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 1.5rem;
 }
+
+.save-btn {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 6px;
+  background: #27667b;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.save-btn:hover {
+  background: #1e4f63;
+  transform: translateY(-1px);
+}
+
 
 .profile-card {
   background: #f8fafc;

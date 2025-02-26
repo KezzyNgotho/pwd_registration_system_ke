@@ -365,24 +365,17 @@ let formErrors = {
 
 
 <div class="registration-container {disability}-mode" role="form">
+
   <!-- Assistive Controls -->
-  <div class="assistive-controls" class:visible={disability}>
-    {#if disability === 'visual'}
-      <button 
-        class="btn btn-voice" 
-        class:active={isListening} 
-        on:click={toggleVoiceInput}
-        aria-label="Toggle voice input">
-        <i class="bi bi-mic" aria-hidden="true"></i>
-      </button>
-    {/if}
-    <button 
-      class="btn btn-help" 
-      on:click={() => assistiveTools?.provideContextualHelp()}
-      aria-label="Get help">
-      <i class="bi bi-question-circle" aria-hidden="true"></i>
-    </button>
-  </div>
+ <button 
+  class="close-button" 
+  on:click={() => window.location.href = '/'} 
+  aria-label="Close and return to home page"
+>
+  <i class="bi bi-x-lg" aria-hidden="true"></i>
+</button>
+
+
 
   <!-- Progress Bar -->
   <div class="progress-wrapper mb-4">
@@ -510,20 +503,19 @@ let formErrors = {
     </div>
   {/if}
 
-    <!-- Education Section -->
-    {#if currentSection === 'education'}
+  {#if currentSection === 'education'}
   <div class="form-section animate-in" role="region" aria-labelledby="education-heading">
     <h3 id="education-heading"><i class="bi bi-book"></i> Education & Skills</h3>
     <div class="row g-4">
       <div class="col-12">
-        <div class="form-check mb-3">
+        <div class="checkbox-wrapper">
           <input 
             type="checkbox" 
-            class="form-check-input" 
+            class="custom-checkbox" 
             id="noFormalEducation"
             bind:checked={userResponses.educationInfo.noFormalEducation}
           />
-          <label class="form-check-label" for="noFormalEducation">
+          <label class="custom-checkbox-label" for="noFormalEducation">
             No Formal Education
           </label>
         </div>
@@ -540,16 +532,86 @@ let formErrors = {
           </select>
         </div>
 
-        
+        <div class="col-md-6">
+          <label for="institution" class="form-label">Institution Name</label>
+          <input 
+            {...createInputProps('institution', 'text', userResponses.educationInfo.institution)}
+            placeholder="Enter institution name"
+          />
+        </div>
+
+        <div class="col-md-6">
+          <label for="yearCompleted" class="form-label">Year Completed</label>
+          <input 
+            {...createInputProps('yearCompleted', 'number', userResponses.educationInfo.yearCompleted)}
+            min="1950"
+            max={new Date().getFullYear()}
+          />
+        </div>
+
+        <div class="col-md-6">
+          <label for="specialization" class="form-label">Field of Study/Specialization</label>
+          <input 
+            {...createInputProps('specialization', 'text', userResponses.educationInfo.specialization)}
+            placeholder="Enter your field of study"
+          />
+        </div>
+
+        <div class="col-12">
+          <label for="skills" class="form-label">Skills & Certifications</label>
+          <textarea 
+            class="form-control"
+            id="skills"
+            rows="3"
+            placeholder="List your relevant skills and certifications"
+            bind:value={userResponses.educationInfo.skills}
+          ></textarea>
+        </div>
+
+         <!-- Certificate upload section with proper label association -->
+        <div class="col-12">
+          <label for="certificateUpload" class="form-label">Upload Your Educational Certificates</label>
+          <div class="certificate-upload">
+            <input 
+              id="certificateUpload"
+              type="file"
+              class="form-control"
+              accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+              on:change={handleCertificateUpload}
+              aria-describedby="certificateHint"
+              multiple
+            />
+          </div>
+          <div id="certificateHint" class="form-text">
+            Accepted formats: PDF, DOC, DOCX, JPG, JPEG, PNG
+          </div>
+        </div>
+
+        <!-- Certificate list with accessible remove buttons -->
+        {#if userResponses.educationInfo.certificates?.length > 0}
+          <div class="certificate-list mt-3">
+            {#each userResponses.educationInfo.certificates as cert, index}
+              <div class="certificate-item">
+                <span>{cert.name}</span>
+                <button 
+                  type="button" 
+                  class="btn btn-sm btn-danger"
+                  on:click={() => removeCertificate(index)}
+                  aria-label={`Remove ${cert.name} certificate`}
+                >
+                  <i class="bi bi-trash" aria-hidden="true"></i>
+                </button>
+              </div>
+            {/each}
+          </div>
+        {/if}
+
+
       {/if}
-
-    
-    
-
-      
     </div>
   </div>
 {/if}
+
 
 
 
@@ -972,5 +1034,104 @@ let formErrors = {
     transform: scale(1.1);
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   }
+
+  .close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.close-button:hover {
+  background: #f8f9fa;
+  transform: rotate(90deg);
+}
+
+.close-button i {
+  font-size: 1.2rem;
+  color: #27667B;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.custom-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #27667B;
+}
+
+.custom-checkbox-label {
+  font-weight: 500;
+  color: #2c3e50;
+  cursor: pointer;
+  user-select: none;
+}
+
+.custom-checkbox:checked + .custom-checkbox-label {
+  color: #27667B;
+}
+
+.certificate-upload {
+  border: 2px dashed #dee2e6;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.certificate-upload:hover {
+  border-color: #27667B;
+  background: #f8f9fa;
+}
+
+.certificate-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.certificate-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.btn-danger {
+  background: #dc3545;
+  border: none;
+}
+
+.btn-danger:hover {
+  background: #bb2d3b;
+}
+
+
 
 </style>

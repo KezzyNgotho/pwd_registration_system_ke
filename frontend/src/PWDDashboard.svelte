@@ -1,7 +1,34 @@
 <script>
 import { user } from '../src/authstore';
  import { pwdDashboardState } from '../src/dashboardStore.js';
+  import ImageUpload from '/home/keziah/pwd_reg_system/frontend/src/ImageUpload.svelte';
 
+   let imageUrl = "../src/assets/icons8-user-50.png";
+  let fileInput;
+
+  function triggerFileInput() {
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  function handleFileChange(event) {
+    const file = event.target.files[0];
+    if (file) {
+      imageUrl = URL.createObjectURL(file);
+    }
+  }
+
+  
+  function handleImageUpload(event) {
+    const { file, imageUrl } = event.detail;
+    // Here you can handle the uploaded file
+    // For example, send it to your server or store it
+    userData = {
+      ...userData,
+      profileImage: imageUrl
+    };
+  }
  // Subscribe to dashboard state
   
 // Enhanced menu click handler
@@ -138,15 +165,32 @@ function formatAddress(address) {
   <div class="dashboard-modal">
     <div class="modal-content">
       <div class="modal-sidebar">
-        <div class="user-profile">
-          <div class="avatar">
-            <img src="../src/assets/download.png" alt="User avatar" />
-          </div>
-          <h3>{user.name}</h3>
-          <span class="user-id">ID: {user.id}</span>
+       <div class="user-profile">
+      <div class="image-upload">
+      <input
+        type="file"
+        accept="image/*"
+        bind:this={fileInput}
+        on:change={handleFileChange}
+        style="display: none"
+      />
+      <div 
+        class="avatar-container" 
+        role="button"
+        tabindex="0"
+        aria-label="Upload profile picture"
+        on:click={triggerFileInput} 
+        on:keydown={(e) => e.key === 'Enter' && triggerFileInput()}
+      >
+        <img src={imageUrl} alt="User avatar" class="avatar-image"/>
+        <div class="upload-overlay">
+          <i class="bi bi-camera" aria-hidden="true"></i>
+          <span>Change Photo</span>
         </div>
+      </div>
+    </div>
 
-
+</div>
 
               {#each menuItems as menuItem}
         <button 
@@ -399,11 +443,67 @@ function formatAddress(address) {
   
 }
 
+.image-upload {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 1.5rem;
+}
 
+.avatar-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  border: 3px solid #27667B;
+  transition: all 0.3s ease;
+}
 
-/* Add these new styles to your existing CSS */
+.avatar-container:hover .upload-overlay,
+.avatar-container:focus .upload-overlay {
+  opacity: 1;
+}
 
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
 
+.upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(39, 102, 123, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: white;
+}
+
+.upload-overlay i {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.upload-overlay span {
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* Focus styles for accessibility */
+.avatar-container:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(39, 102, 123, 0.3);
+}
 
 .menu-item {
   display: flex;
@@ -436,13 +536,7 @@ function formatAddress(address) {
   margin-bottom:  1rem;
 }
 
-.avatar img {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 4px solid #27667B;
-  padding: 4px;
-}
+
 
 .info-section {
   background: white;
@@ -541,15 +635,6 @@ function formatAddress(address) {
     border-bottom: 1px solid #e9ecef;
   }
 
-  .avatar img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 1rem;
-  }
-
-  
 
 
   .menu-item.active {
@@ -666,17 +751,14 @@ function formatAddress(address) {
 }
 
 .profile-card {
-  background: white;
-  border-radius: 6px;
+  background: #e9ecef;
+  border-radius: 2px;
   padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   display: flex;
   gap: 2rem;
 }
 
-.profile-avatar {
-  position: relative;
-}
+
 
 .profile-info {
   flex: 1;
@@ -770,10 +852,6 @@ function formatAddress(address) {
     padding: 8px 12px; /* Smaller padding */
   }
   
-  .avatar img {
-    width: 80px; /* Smaller avatar */
-    height: 80px;
-  }
   
   .section-grid {
     grid-template-columns: 1fr; /* Single column */

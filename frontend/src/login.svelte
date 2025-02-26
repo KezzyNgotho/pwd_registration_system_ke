@@ -101,6 +101,75 @@
     animation: slideIn 0.3s ease-out;
   }
 
+/* Enhanced Media Queries */
+@media (max-width: 992px) {
+  .login-modal {
+    width: min(95%, 700px);
+  }
+}
+
+@media (max-width: 768px) {
+  .login-modal {
+    grid-template-columns: 1fr;
+    width: min(95%, 500px);
+  }
+
+  .login-left {
+    padding: 1.5rem;
+  }
+
+  .login-right {
+    padding: 1.5rem;
+    max-height: 60vh;
+  }
+
+  .user-type-selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-modal {
+    width: 95%;
+    margin: 0.5rem;
+  }
+
+  .login-left, .login-right {
+    padding: 1rem;
+  }
+
+  input, select, .type-button {
+    padding: 0.625rem;
+    font-size: 0.875rem;
+  }
+
+  .type-button {
+    padding: 0.75rem;
+  }
+}
+/* Height-based media queries */
+@media (max-height: 700px) {
+  .login-modal {
+    max-height: 95vh;
+  }
+
+  .login-right {
+    max-height: 50vh;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .type-button:hover {
+    transform: none;
+  }
+
+  input, select, button {
+    min-height: 44px; /* Touch target size */
+  }
+}
   .login-left {
     padding: clamp(1.25rem, 3vw, 2.5rem);
     background: linear-gradient(145deg, #27667b, #1e5163);

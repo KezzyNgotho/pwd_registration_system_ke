@@ -281,7 +281,7 @@ function handleDisabilitySelect(disability) {
   /* Container & Card Styles */
   .image-container {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 2px solid rgba(39, 102, 123, 0.1);
+    
   }
 
   .feature-card {
@@ -442,70 +442,57 @@ function handleDisabilitySelect(disability) {
     }
   }
 
-  /* Hover Effects */
-  .image-container {
+
+
+
+
+ .image-container {
     position: relative;
-    max-width: 500px;
+    max-width: 480px;
     margin: 0 auto;
   }
 
-  .image-frame {
-    position: relative;
-    border: 2px solid #27667B;
-    border-radius: 24px;
-    padding: 12px;
-    //background: linear-gradient(145deg, rgba(39, 102, 123, 0.05), rgba(39, 102, 123, 0.02));
+  /* Option 1: Classic Sharp Oval */
+  .sharp-oval {
+    border-radius: 50% / 50%;
+    background:white;
+    padding: 1.5rem;
+     border: 3px solid #27667B;
   }
+
+  
 
   .main-image {
     width: 100%;
-    height: 400px;
-    object-fit: cover;
-    //border-radius: 16px;
-    //border: 2px solid rgba(39, 102, 123, 0.1);
-  }
-
-  .decoration-dot {
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: #27667B;
-  }
-
-  .dot-1 {
-    top: -6px;
-    left: 24px;
-  }
-
-  .dot-2 {
-    bottom: -6px;
-    right: 24px;
-  }
-
-  .decoration-line {
-    position: absolute;
-    top: -20px;
-    right: -20px;
-    width: 80px;
-    height: 80px;
-    border-right: 2px solid #27667B;
-    border-top: 2px solid #27667B;
-    border-radius: 0 16px 0 0;
+    max-width: 400px;
+    height: auto;
+    border-radius: inherit;
   }
 
   .feature-card {
     position: absolute;
-    bottom: 24px;
-    right: -20px;
+    bottom: -10px;
+    right: 10px;
     background: white;
-    padding: 20px;
-    border-radius: 16px;
-    border: 2px solid #27667B;
-    max-width: 280px;
-    transform: translateY(0);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   .feature-header {
     display: flex;
@@ -513,20 +500,18 @@ function handleDisabilitySelect(disability) {
     gap: 16px;
   }
 
-  .icon-wrapper {
+
+ .icon-wrapper {
     width: 48px;
     height: 48px;
+    margin: 0 auto 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(39, 102, 123, 0.1);
+    background: #27667B;
     border-radius: 12px;
-    border: 2px solid rgba(39, 102, 123, 0.1);
-  }
-
-  .icon-wrapper i {
-    color: #27667B;
-    font-size: 24px;
+     color: white;
+     font-size: 24px;
   }
 
   .feature-text h4 {
@@ -555,6 +540,45 @@ function handleDisabilitySelect(disability) {
     text-align: center;
   }
 
+
+   .logo-container {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .logo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .custom-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f8f9fa;
+    padding: 8px 16px;
+    border-radius: 50px;
+  }
+
+  .badge-text {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .main-image {
+    max-width: 50%;
+    height: auto;
+    border-radius: 1px;
+  }
+
   .stat-number {
     display: block;
     font-size: 18px;
@@ -581,13 +605,9 @@ function handleDisabilitySelect(disability) {
     box-shadow: 0 20px 40px rgba(39, 102, 123, 0.15);
   }
 
-  .image-container:hover .icon-wrapper {
-    background: #27667B;
-  }
+  
 
-  .image-container:hover .icon-wrapper i {
-    color: white;
-  }
+
 
    .modal-overlay {
     position: fixed;
@@ -659,21 +679,7 @@ function handleDisabilitySelect(disability) {
     transform: translateY(-2px);
   }
 
-  .icon-wrapper {
-    width: 48px;
-    height: 48px;
-    margin: 0 auto 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #27667B;
-    border-radius: 12px;
-  }
-
-  .icon-wrapper i {
-    color: white;
-    font-size: 24px;
-  }
+ 
 
   .role-label {
     color: #27667B;
@@ -862,7 +868,7 @@ function handleDisabilitySelect(disability) {
   <div class="container">
     <!-- Brand -->
     <a class="navbar-brand d-flex align-items-center" href="/">
-      <i class="bi bi-heart-pulse brand-icon"></i>
+     <i class="bi bi-person-wheelchair brand-icon"></i>
       <span class="brand-text">PWD Connect</span>
     </a>
 
@@ -993,48 +999,37 @@ function handleDisabilitySelect(disability) {
     </div>
   </div>
 </div>
-     <div class="col-lg-6">
-  <div class="position-relative">
-    <div class="image-container">
-      <div class="image-frame">
-        <img 
-          src={image} 
-          alt="PWD Support" 
-          class="main-image"
-        >
-        <!-- Decorative elements -->
-        <div class="decoration-dot dot-1"></div>
-        <div class="decoration-dot dot-2"></div>
-        <div class="decoration-line"></div>
+  
+ <div class="col-lg-6">
+  <div class="image-container">
+    <div class="sharp-oval">
+      <img 
+        src={image} 
+        alt="PWD Support" 
+        class="main-image"
+      >
+ 
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-text">
+        <h4>Easy Registration</h4>
+        <p>Get your PWD ID in 3 simple steps</p>
       </div>
       
-      <div class="feature-card">
-        <div class="feature-header">
-          <div class="icon-wrapper">
-            <i class="bi bi-check-circle-fill"></i>
-          </div>
-          <div class="feature-text">
-            <h4>Easy Registration</h4>
-            <p>Get your PWD ID in 3 simple steps</p>
-          </div>
+      <div class="feature-stats">
+        <div class="stat-item">
+          <span class="stat-number">5min</span>
+          <span class="stat-label">Process Time</span>
         </div>
-        
-        <div class="feature-stats">
-          <div class="stat-item">
-            <span class="stat-number">5min</span>
-            <span class="stat-label">Process Time</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-number">24/7</span>
-            <span class="stat-label">Support</span>
-          </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">24/7</span>
+          <span class="stat-label">Support</span>
         </div>
       </div>
     </div>
-    </div>
-   
-
+  </div>
 </div>
 
     </div>
